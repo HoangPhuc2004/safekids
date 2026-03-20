@@ -2,41 +2,25 @@ import { useNavigate, useLocation } from "react-router";
 import { Users, Crown, Trophy, Sparkles, ArrowLeft, Gamepad2, Settings, Share2, LogOut, Plus } from "lucide-react";
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useGameRoom } from "../../context/GameRoomContext";
 
 export default function GameLobbyView() {
   const navigate = useNavigate();
-  const location = useLocation();
-  const [playerCount, setPlayerCount] = useState(1);
-  const [isHost, setIsHost] = useState(false);
+  const { activeRoom } = useGameRoom();
 
-  // Giả lập thêm người chơi
+  // Redirect if room no longer exists or student hasn't joined
   useEffect(() => {
-    const interval = setInterval(() => {
-      setPlayerCount(prev => {
-        if (prev < 12) return prev + Math.floor(Math.random() * 2);
-        return prev;
-      });
-    }, 2000);
+    if (!activeRoom) {
+      navigate("/student");
+    } else if (activeRoom.status === 'playing') {
+      navigate("/student/story-game"); // Simulate game start
+    }
+  }, [activeRoom, navigate]);
 
-    return () => clearInterval(interval);
-  }, []);
+  if (!activeRoom) return null;
 
-  const players = [
-    { name: "Minh Đức", avatar: "MĐ", color: "from-indigo-500 to-blue-600" },
-    { name: "Lan Anh", avatar: "LA", color: "from-pink-500 to-rose-600" },
-    { name: "Hoàng Nam", avatar: "HN", color: "from-green-500 to-emerald-600" },
-    { name: "Thu Hà", avatar: "TH", color: "from-purple-500 to-indigo-600" },
-    { name: "Quốc Bảo", avatar: "QB", color: "from-orange-500 to-amber-600" },
-    { name: "Phương Linh", avatar: "PL", color: "from-blue-500 to-cyan-600" },
-    { name: "Tuấn Kiệt", avatar: "TK", color: "from-red-500 to-rose-600" },
-    { name: "Mai Ly", avatar: "ML", color: "from-yellow-500 to-amber-600" },
-    { name: "Đức Anh", avatar: "ĐA", color: "from-teal-500 to-emerald-600" },
-    { name: "Ngọc Hân", avatar: "NH", color: "from-cyan-500 to-blue-600" },
-    { name: "Minh Khoa", avatar: "MK", color: "from-emerald-500 to-green-600" },
-    { name: "Bảo Trâm", avatar: "BT", color: "from-rose-500 to-pink-600" },
-  ];
-
-  const displayPlayers = players.slice(0, playerCount);
+  const displayPlayers = activeRoom.players;
+  const playerCount = displayPlayers.length;
 
   return (
     <div className="min-h-screen bg-[#0f172a] flex flex-col relative overflow-hidden font-sans">
@@ -59,7 +43,7 @@ export default function GameLobbyView() {
         
         <div className="flex flex-col items-center">
             <div className="bg-white/10 backdrop-blur-2xl border border-white/20 px-8 py-3 rounded-3xl shadow-2xl">
-              <span className="text-white font-black text-3xl tracking-[0.3em] pl-[0.3em]">SAFE99</span>
+              <span className="text-white font-black text-3xl tracking-[0.3em] pl-[0.3em]">{activeRoom.id}</span>
             </div>
             <p className="text-indigo-400 font-black text-[10px] uppercase tracking-[0.5em] mt-2 translate-x-0.5">Mã phòng công khai</p>
         </div>

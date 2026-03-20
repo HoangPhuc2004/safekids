@@ -2,9 +2,11 @@ import { useState } from "react";
 import { useNavigate } from "react-router";
 import { ChevronLeft, LayoutGrid, CheckCircle2, PlayCircle, Plus, Info, Sparkles, Wand2, Type, Database, Check } from "lucide-react";
 import { ImageWithFallback } from "../../components/figma/ImageWithFallback";
+import { useGameRoom } from "../../context/GameRoomContext";
 
 export default function CreateGameView() {
   const navigate = useNavigate();
+  const { createRoom } = useGameRoom();
   const [selectedTemplate, setSelectedTemplate] = useState<string>("quiz");
   const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
   const [gameName, setGameName] = useState("");
@@ -41,7 +43,13 @@ export default function CreateGameView() {
       alert("Vui lòng nhập tên game và chọn video bài giảng!");
       return;
     }
-    navigate("/teacher");
+    createRoom({
+      teacherId: "t1",
+      gameName,
+      template: selectedTemplate,
+      video: selectedVideo
+    });
+    navigate("/teacher/game-lobby");
   };
 
   return (

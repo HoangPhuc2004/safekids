@@ -1,8 +1,12 @@
 import { useNavigate } from "react-router";
 import { PlayCircle, ShieldAlert, KeyRound, Trophy, Compass, ArrowRight, Sparkles, BookOpen, Star } from "lucide-react";
+import { useGameRoom } from "../../context/GameRoomContext";
+import { useState } from "react";
 
 export default function StudentHome() {
   const navigate = useNavigate();
+  const { joinRoom } = useGameRoom();
+  const [roomCode, setRoomCode] = useState("");
 
   const learningPath = [
     { id: "course-1", title: "Bài 1: Cơ thể của tớ", status: "completed", duration: "10 phút", description: "Tìm hiểu về các bộ phận cơ thể và ranh giới cá nhân." },
@@ -48,9 +52,23 @@ export default function StudentHome() {
                   <input 
                     type="text" 
                     placeholder="Nhập mã phòng (VD: 1234)" 
+                    value={roomCode}
+                    onChange={(e) => setRoomCode(e.target.value)}
                     className="flex-1 px-6 py-4 bg-gray-50 border-2 border-transparent rounded-2xl focus:outline-none focus:border-indigo-500 focus:bg-white transition-all uppercase tracking-widest font-mono font-black text-lg text-center md:text-left" 
                   />
-                  <button className="bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-4 rounded-2xl font-black transition-all shadow-lg hover:shadow-indigo-200 active:scale-95">
+                  <button 
+                    onClick={() => {
+                      if (!roomCode) return;
+                      // Giả lập player
+                      const success = joinRoom(roomCode, { name: "Minh Đức", avatar: "MĐ", color: "from-indigo-500 to-blue-600" });
+                      if (success) {
+                        navigate("/student/game-lobby");
+                      } else {
+                        alert("Không tìm thấy mã phòng hoặc phòng đã đóng!");
+                      }
+                    }}
+                    className="bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-4 rounded-2xl font-black transition-all shadow-lg hover:shadow-indigo-200 active:scale-95"
+                  >
                     VÀO NGAY
                   </button>
                 </div>
