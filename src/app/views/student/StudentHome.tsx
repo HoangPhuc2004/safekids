@@ -2,11 +2,16 @@ import { useNavigate } from "react-router";
 import { PlayCircle, ShieldAlert, KeyRound, Trophy, Compass, ArrowRight, Sparkles, BookOpen, Star } from "lucide-react";
 import { useGameRoom } from "../../context/GameRoomContext";
 import { useState } from "react";
+import { useAuth } from "../../context/AuthContext";
 
 export default function StudentHome() {
   const navigate = useNavigate();
   const { joinRoom } = useGameRoom();
+  const { user } = useAuth();
   const [roomCode, setRoomCode] = useState("");
+  
+  const userName = user?.name || "Học sinh";
+  const userAvatar = userName.substring(0, 2).toUpperCase();
 
   const learningPath = [
     { id: "course-1", title: "Bài 1: Cơ thể của tớ", status: "completed", duration: "10 phút", description: "Tìm hiểu về các bộ phận cơ thể và ranh giới cá nhân." },
@@ -20,7 +25,7 @@ export default function StudentHome() {
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-4">
         <div>
           <h1 className="text-3xl lg:text-4xl font-black text-gray-900 tracking-tight">
-            Chào em, <span className="text-pink-600">Minh Đức</span> 👋
+            Chào em, <span className="text-pink-600">{userName}</span> 👋
           </h1>
           <p className="text-gray-500 font-bold mt-1 text-lg">Hôm nay em muốn khám phá điều gì mới nào?</p>
         </div>
@@ -59,8 +64,7 @@ export default function StudentHome() {
                   <button 
                     onClick={() => {
                       if (!roomCode) return;
-                      // Giả lập player
-                      const success = joinRoom(roomCode, { name: "Minh Đức", avatar: "MĐ", color: "from-indigo-500 to-blue-600" });
+                      const success = joinRoom(roomCode, { name: userName, avatar: userAvatar, color: "from-indigo-500 to-blue-600" });
                       if (success) {
                         navigate("/student/game-lobby");
                       } else {

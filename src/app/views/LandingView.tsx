@@ -1,19 +1,29 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { Shield, ArrowRight, UserPlus, LogIn } from "lucide-react";
+import { useAuth } from "../context/AuthContext";
 
 export default function LandingView() {
   const [isLogin, setIsLogin] = useState(true);
   const [role, setRole] = useState("student");
   const [hasDisability, setHasDisability] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const handleAuth = (e: React.FormEvent) => {
     e.preventDefault();
-    if (role === "teacher") {
-      navigate("/teacher");
+    if (isLogin) {
+      if (login(email, password)) {
+        if (role === "teacher") navigate("/teacher");
+        else navigate("/student");
+      } else {
+        alert("Sai email hoặc mật khẩu!");
+      }
     } else {
-      navigate("/student");
+      alert("Đăng ký thành công, vui lòng đăng nhập!");
+      setIsLogin(true);
     }
   };
 
@@ -114,6 +124,8 @@ export default function LandingView() {
                 <input
                   type="email"
                   required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   className="w-full px-4 py-3 bg-gray-50 border-2 border-transparent rounded-2xl focus:outline-none focus:border-pink-500 focus:bg-white transition-all text-gray-800 placeholder:text-gray-400"
                   placeholder="name@example.com"
                 />
@@ -126,6 +138,8 @@ export default function LandingView() {
                 <input
                   type="password"
                   required
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                   className="w-full px-4 py-3 bg-gray-50 border-2 border-transparent rounded-2xl focus:outline-none focus:border-pink-500 focus:bg-white transition-all text-gray-800 placeholder:text-gray-400"
                   placeholder="••••••••"
                 />
