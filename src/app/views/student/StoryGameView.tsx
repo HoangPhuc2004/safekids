@@ -134,7 +134,32 @@ export default function StoryGameView() {
             <div className="absolute inset-0 bg-gradient-to-t from-indigo-950 via-indigo-950/20 lg:via-transparent lg:from-transparent lg:to-transparent to-transparent"></div>
             <div className="hidden lg:block absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-indigo-950 to-transparent"></div>
             
-            <div className="absolute bottom-0 w-full p-8 lg:p-12">
+            {/* Interactive Character Overlay */}
+            <div className="absolute inset-0 flex flex-col items-center justify-end lg:justify-center z-10 pointer-events-none pb-40 lg:pb-0">
+              <motion.div 
+                className="relative cursor-pointer pointer-events-auto group/character lg:mt-20"
+                initial={{ y: 50, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ duration: 0.6, delay: 0.3 }}
+                whileHover={{ scale: 1.05, y: -10 }}
+              >
+                {/* Speech Bubble on Hover */}
+                <div className="absolute -top-14 left-1/2 -translate-x-1/2 bg-white text-indigo-900 px-6 py-3 rounded-2xl rounded-bl-sm font-bold text-sm lg:text-base shadow-2xl opacity-0 translate-y-4 group-hover/character:opacity-100 group-hover/character:translate-y-0 transition-all duration-300 whitespace-nowrap z-30 pointer-events-none border-2 border-indigo-100">
+                  <span className="animate-pulse inline-block mr-2">💭</span>
+                  Trời ơi, đau đầu quá!
+                  <div className="absolute -bottom-[10px] left-6 w-4 h-4 bg-white border-b-2 border-r-2 border-indigo-100 transform rotate-45"></div>
+                </div>
+                
+                {/* Character Image */}
+                <img 
+                  src="/character-sad.png" 
+                  alt="Story Character" 
+                  className="w-[200px] lg:w-[320px] object-contain drop-shadow-[0_20px_50px_rgba(0,0,0,0.5)] filter hover:brightness-110 hover:drop-shadow-[0_0_30px_rgba(255,255,255,0.3)] transition-all duration-300 pointer-events-auto"
+                />
+              </motion.div>
+            </div>
+
+            <div className="absolute bottom-0 w-full p-8 lg:p-12 z-20">
                <motion.div
                 initial={{ x: -20, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
