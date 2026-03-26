@@ -125,53 +125,46 @@ export default function StoryGameView() {
           className="flex-1 flex flex-col lg:flex-row h-full overflow-hidden"
         >
           {/* Visual Column / Area */}
-          <div className="relative h-[35vh] lg:h-full lg:w-1/2 flex-shrink-0 group overflow-hidden">
-            <ImageWithFallback 
-              src={currentNode.image} 
-              alt={currentNode.title}
-              className="absolute inset-0 w-full h-full object-cover transition-transform duration-10000 ease-linear scale-110 group-hover:scale-100"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-indigo-950 via-indigo-950/20 lg:via-transparent lg:from-transparent lg:to-transparent to-transparent"></div>
-            <div className="hidden lg:block absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-indigo-950 to-transparent"></div>
-            
-            {/* Interactive Character Overlay */}
-            <div className="absolute inset-0 flex flex-col items-center justify-end lg:justify-center z-10 pointer-events-none pb-40 lg:pb-0">
-              <motion.div 
-                className="relative cursor-pointer pointer-events-auto group/character lg:mt-20"
-                initial={{ y: 50, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ duration: 0.6, delay: 0.3 }}
-                whileHover={{ scale: 1.05, y: -10 }}
-              >
-                {/* Speech Bubble on Hover */}
-                <div className="absolute -top-14 left-1/2 -translate-x-1/2 bg-white text-indigo-900 px-6 py-3 rounded-2xl rounded-bl-sm font-bold text-sm lg:text-base shadow-2xl opacity-0 translate-y-4 group-hover/character:opacity-100 group-hover/character:translate-y-0 transition-all duration-300 whitespace-nowrap z-30 pointer-events-none border-2 border-indigo-100">
-                  <span className="animate-pulse inline-block mr-2">💭</span>
-                  Trời ơi, đau đầu quá!
-                  <div className="absolute -bottom-[10px] left-6 w-4 h-4 bg-white border-b-2 border-r-2 border-indigo-100 transform rotate-45"></div>
-                </div>
-                
-                {/* Character Image */}
-                <img 
-                  src="/character-sad.png" 
-                  alt="Story Character" 
-                  className="w-[200px] lg:w-[320px] object-contain drop-shadow-[0_20px_50px_rgba(0,0,0,0.5)] filter hover:brightness-110 hover:drop-shadow-[0_0_30px_rgba(255,255,255,0.3)] transition-all duration-300 pointer-events-auto"
-                />
-              </motion.div>
-            </div>
-
-            <div className="absolute bottom-0 w-full p-8 lg:p-12 z-20">
+          <div className="relative h-[40vh] lg:h-[100%] lg:w-1/2 flex-shrink-0 group overflow-hidden bg-indigo-950/80 flex flex-col justify-between items-center z-10">
+            {/* Title & Subtitle - Moved to top left */}
+            <div className="absolute top-0 w-full p-8 lg:p-12 z-20 mt-16 lg:mt-24 pointer-events-none">
                <motion.div
                 initial={{ x: -20, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
                 transition={{ delay: 0.4 }}
               >
-                <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-indigo-500 text-white rounded-full text-[10px] font-black tracking-widest uppercase mb-4 shadow-xl shadow-indigo-500/20">
-                  {currentNode.isEnding ? <ShieldCheck size={14} /> : <Star size={14} />}
+                <div className="inline-flex items-center gap-2 px-5 py-2 bg-indigo-500/90 text-white rounded-full text-xs font-black tracking-[0.1em] uppercase mb-4 shadow-xl border border-white/10 pointer-events-auto">
+                  {currentNode.isEnding ? <ShieldCheck size={16} /> : <Star size={16} />}
                   {currentNode.title}
                 </div>
-                <h1 className="text-4xl lg:text-5xl font-black text-white leading-tight drop-shadow-2xl">
+                <h1 className="text-4xl lg:text-[3.25rem] font-black text-white leading-[1.1] drop-shadow-2xl">
                   {currentNode.subtitle}
                 </h1>
+              </motion.div>
+            </div>
+
+            {/* Interactive Character Overhead */}
+            <div className="absolute bottom-0 w-full flex justify-center z-10 pointer-events-none">
+              <motion.div 
+                className="relative cursor-pointer pointer-events-auto group/character w-full flex justify-center"
+                initial={{ y: 50, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ duration: 0.6, type: "spring", damping: 15 }}
+                whileHover={{ scale: 1.05, y: -20 }}
+              >
+                {/* Speech Bubble */}
+                <div className="absolute -top-10 lg:-top-16 left-1/2 -translate-x-1/2 bg-white text-indigo-900 px-6 py-4 rounded-3xl rounded-bl-md font-bold text-base lg:text-xl shadow-2xl opacity-0 translate-y-4 group-hover/character:opacity-100 group-hover/character:translate-y-0 transition-all duration-300 whitespace-nowrap z-30 pointer-events-none border-4 border-indigo-100/50">
+                  <span className="animate-pulse inline-block mr-2">💭</span>
+                  Trời ơi, đau đầu quá!
+                  <div className="absolute -bottom-3 left-8 w-6 h-6 bg-white border-b-4 border-r-4 border-indigo-100/50 transform rotate-45"></div>
+                </div>
+                
+                {/* The Character */}
+                <img 
+                  src="/character-sad.png" 
+                  alt="Story Character" 
+                  className="w-[85%] lg:w-[130%] max-w-[350px] lg:max-w-[700px] object-contain drop-shadow-[0_20px_50px_rgba(0,0,0,0.4)] filter hover:brightness-110 hover:drop-shadow-[0_0_50px_rgba(99,102,241,0.6)] transition-all duration-300 pointer-events-auto origin-bottom translate-y-[15%]"
+                />
               </motion.div>
             </div>
           </div>
