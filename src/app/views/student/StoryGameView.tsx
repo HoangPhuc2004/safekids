@@ -122,10 +122,10 @@ export default function StoryGameView() {
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.95 }}
           transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-          className="flex-1 flex flex-col lg:flex-row h-full overflow-hidden"
+          className="flex-1 flex flex-col md:flex-row h-full overflow-hidden"
         >
           {/* Visual Column / Area */}
-          <div className="relative h-[40vh] lg:h-[100%] lg:w-1/2 flex-shrink-0 group overflow-hidden bg-indigo-950/80 flex flex-col justify-between items-center z-10">
+          <div className="relative h-[40vh] md:h-[100%] lg:w-1/2 flex-shrink-0 group overflow-hidden bg-indigo-950/80 flex flex-col justify-between items-center z-10">
             {/* Title & Subtitle - Moved to top left */}
             <div className="absolute top-0 w-full p-8 lg:p-12 z-20 mt-16 lg:mt-24 pointer-events-none">
                <motion.div

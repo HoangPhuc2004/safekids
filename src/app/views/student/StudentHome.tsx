@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router";
-import { PlayCircle, ShieldAlert, KeyRound, Trophy, Compass, ArrowRight, Sparkles, BookOpen, Star } from "lucide-react";
+import { PlayCircle, KeyRound, Trophy, Compass, ArrowRight, Sparkles, BookOpen, Star } from "lucide-react";
 import { useGameRoom } from "../../context/GameRoomContext";
 import { useState } from "react";
 import { useAuth } from "../../context/AuthContext";
@@ -101,14 +101,8 @@ export default function StudentHome() {
               </div>
             </button>
 
-            <div className="grid grid-cols-2 gap-4">
-               <button onClick={() => navigate("/student/report")} className="bg-white p-6 rounded-3xl shadow-sm border border-red-50 flex flex-col items-center justify-center gap-3 hover:bg-red-50 transition-all hover:shadow-md group">
-                <div className="w-14 h-14 bg-red-100 text-red-600 rounded-2xl flex items-center justify-center transition-transform group-hover:scale-110">
-                  <ShieldAlert size={28} />
-                </div>
-                <span className="text-sm font-black text-gray-700 text-center">BÁO CÁO VI PHẠM</span>
-              </button>
-              <button onClick={() => navigate("/student/groups")} className="bg-white p-6 rounded-3xl shadow-sm border border-indigo-50 flex flex-col items-center justify-center gap-3 hover:bg-indigo-50 transition-all hover:shadow-md group">
+            <div className="flex flex-col gap-4 h-full">
+              <button onClick={() => navigate("/student/groups")} className="bg-white p-6 rounded-3xl shadow-sm border border-indigo-50 flex flex-col items-center justify-center gap-3 hover:bg-indigo-50 transition-all hover:shadow-md group h-full">
                 <div className="w-14 h-14 bg-indigo-100 text-indigo-600 rounded-2xl flex items-center justify-center transition-transform group-hover:scale-110">
                   <Compass size={28} />
                 </div>

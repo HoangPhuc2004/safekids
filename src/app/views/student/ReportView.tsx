@@ -31,7 +31,31 @@ export default function ReportView() {
 
       <div className="flex-1 max-w-5xl mx-auto w-full p-6 lg:p-10">
         {step === 1 ? (
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
+          <div className="space-y-10">
+            {/* Full-width Warning Banner */}
+            <div className="bg-gradient-to-r from-rose-600 to-red-500 text-white p-8 lg:p-10 rounded-[2.5rem] shadow-xl shadow-rose-200 relative overflow-hidden group">
+               <div className="absolute -right-10 -bottom-10 w-64 h-64 bg-white/10 rounded-full group-hover:scale-125 transition-transform" />
+               <div className="absolute -left-10 -top-10 w-40 h-40 bg-white/10 rounded-full group-hover:scale-125 transition-transform" />
+               <div className="relative z-10 flex flex-col md:flex-row items-center gap-6 md:gap-8">
+                 <div className="w-20 h-20 bg-white/20 rounded-[2rem] flex items-center justify-center flex-shrink-0 backdrop-blur-md">
+                   <ShieldAlert size={48} className="text-white" />
+                 </div>
+                 <div className="flex-1 text-center md:text-left">
+                   <h3 className="text-3xl lg:text-4xl font-black mb-3 text-white flex items-center justify-center md:justify-start gap-3">
+                     Cảnh báo Đỏ
+                   </h3>
+                   <p className="text-rose-50 font-bold text-lg leading-relaxed mb-4 max-w-3xl mx-auto md:mx-0">
+                     Hệ thống này được liên kết trực tiếp với <span className="text-white bg-rose-700/50 px-2 py-0.5 rounded-lg border border-rose-500">Tổng đài Quốc gia 111</span>. 
+                     Việc gửi báo cáo giả mạo là hành vi vi phạm pháp luật nghiêm trọng.
+                   </p>
+                   <div className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-widest bg-rose-700/50 px-4 py-2.5 rounded-xl border border-rose-500">
+                     <AlertCircle size={16} /> Bảo mật 2 lớp AES-256
+                   </div>
+                 </div>
+               </div>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
             {/* Left Column: Form */}
             <div className="lg:col-span-2 space-y-8">
               <div className="bg-white p-8 lg:p-10 rounded-[2.5rem] shadow-xl shadow-rose-100/50 border border-white relative overflow-hidden">
@@ -133,21 +157,6 @@ export default function ReportView() {
 
             {/* Right Column: Support info */}
             <div className="space-y-6">
-              <div className="bg-rose-600 text-white p-8 rounded-[2.5rem] shadow-xl shadow-rose-200 relative overflow-hidden group">
-                 <div className="absolute -right-4 -bottom-4 w-32 h-32 bg-white/10 rounded-full group-hover:scale-125 transition-transform" />
-                 <h3 className="text-xl font-black mb-4 flex items-center gap-2">
-                   <ShieldAlert size={24} />
-                   Cảnh báo Đỏ
-                 </h3>
-                 <p className="text-rose-100 font-bold text-sm leading-relaxed mb-6">
-                   Hệ thống này được liên kết trực tiếp với <span className="text-white">Tổng đài Quốc gia 111</span>. 
-                   Việc gửi báo cáo giả mạo là hành vi vi phạm pháp luật.
-                 </p>
-                 <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest bg-rose-700/50 px-3 py-2 rounded-xl">
-                   <AlertCircle size={14} /> Bảo mật 2 lớp AES-256
-                 </div>
-              </div>
-
               <div className="bg-white p-8 rounded-[2.5rem] border border-indigo-50 shadow-sm">
                 <h4 className="font-black text-gray-900 mb-6 uppercase tracking-widest text-xs">Hỗ trợ khẩn cấp 24/7</h4>
                 <div className="space-y-6">
@@ -174,6 +183,7 @@ export default function ReportView() {
                 </div>
               </div>
             </div>
+          </div>
           </div>
         ) : (
           <div className="max-w-3xl mx-auto w-full pt-10">
