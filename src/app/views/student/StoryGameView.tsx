@@ -24,7 +24,7 @@ const storyData: Record<NodeId, StoryNode> = {
     content: 'Linh là một nữ nhà báo đang thực hiện bài điều tra về các trang web phát sóng bóng đá không bản quyền. Trong quá trình tìm hiểu, cô phát hiện nhiều trang web này liên kết với các nền tảng cá độ trực tuyến. Những nền tảng này đã khiến nhiều người rơi vào nợ nần, dẫn đến mâu thuẫn gia đình và nhiều hệ quả xã hội nghiêm trọng.\n\nSau nhiều tuần thu thập thông tin và phỏng vấn các nạn nhân, Linh đăng tải bài viết điều tra của mình trên trang báo. Chỉ trong vài giờ, bài viết thu hút sự chú ý lớn từ cộng đồng mạng. Nhiều người ủng hộ việc phanh phui vấn đề này.\n\nTuy nhiên, bên cạnh đó cũng xuất hiện những bình luận công kích cho rằng cô đang “phá hỏng thú vui xem bóng đá” hoặc “đang cố gây chú ý”. Linh đọc các bình luận và nhận ra cuộc tranh luận đang dần trở nên căng thẳng.',
     image: 'character-default',
     options: [
-      { text: 'Tiếp tục', nextNode: 'scene2', colorClass: 'bg-indigo-600 hover:bg-indigo-700' }
+      { text: 'Tiếp tục', nextNode: 'scene2', colorClass: 'bg-indigo-600 hover:bg-indigo-500' }
     ]
   },
   scene2: {
@@ -33,8 +33,8 @@ const storyData: Record<NodeId, StoryNode> = {
     content: 'Sau khi bài báo được đăng, rất nhiều bình luận tiêu cực và công kích cá nhân nhắm vào Linh xuất hiện liên tiếp. Linh sẽ phải lựa chọn cách đối mặt với tình huống này.',
     image: 'character-angry',
     options: [
-      { text: 'Phản bác các bình luận', nextNode: 'node-phan-bac', colorClass: 'bg-[#ff5722] hover:bg-[#e64a19]' },
-      { text: 'Phớt lờ các bình luận', nextNode: 'node-phot-lo', colorClass: 'bg-[#4f46e5] hover:bg-[#4338ca]' }
+      { text: 'Phản bác các bình luận', nextNode: 'node-phan-bac', colorClass: 'bg-indigo-600 hover:bg-[#ff5722]' },
+      { text: 'Phớt lờ các bình luận', nextNode: 'node-phot-lo', colorClass: 'bg-indigo-600 hover:bg-indigo-500' }
     ]
   },
   'node-phan-bac': {
@@ -42,8 +42,8 @@ const storyData: Record<NodeId, StoryNode> = {
     content: 'Linh quyết định phản hồi và bảo vệ bài viết của mình. Việc này khiến cuộc tranh luận trở nên sôi nổi hơn và thu hút nhiều sự chú ý.\n\nTuy nhiên, phản ứng của cô cũng khiến một người đàn ông – chủ một hệ thống cá độ trực tuyến – chú ý. Hắn bắt đầu tìm kiếm thông tin cá nhân của Linh và gửi những tin nhắn đe dọa yêu cầu cô gỡ bài.\n\nLinh phải quyết định cách xử lý các tin nhắn đe dọa.',
     image: 'character-angry',
     options: [
-      { text: 'Báo cảnh sát và tìm sự hỗ trợ', nextNode: 'end-bao-canh-sat', colorClass: 'bg-[#4f46e5] hover:bg-[#4338ca]' },
-      { text: 'Xóa bài viết', nextNode: 'end-tu-bo', colorClass: 'bg-[#ff5722] hover:bg-[#e64a19]' }
+      { text: 'Báo cảnh sát và tìm sự hỗ trợ', nextNode: 'end-bao-canh-sat', colorClass: 'bg-indigo-600 hover:bg-indigo-500' },
+      { text: 'Xóa bài viết', nextNode: 'end-tu-bo', colorClass: 'bg-indigo-600 hover:bg-[#ff5722]' }
     ]
   },
   'node-phot-lo': {
@@ -51,8 +51,8 @@ const storyData: Record<NodeId, StoryNode> = {
     content: 'Linh chọn cách không tham gia tranh luận và tiếp tục công việc.\n\nNhưng các tài khoản công kích bắt đầu chuyển sang trang cá nhân của cô. Họ đăng các bài viết bôi nhọ và chỉnh sửa hình ảnh của cô để lan truyền trên mạng.\n\nLinh phải đối mặt với việc hình ảnh cá nhân bị lan truyền trên mạng.',
     image: 'character-sad',
     options: [
-      { text: 'Xóa bài viết', nextNode: 'end-tu-bo', colorClass: 'bg-[#ff5722] hover:bg-[#e64a19]' },
-      { text: 'Tìm kiếm sự hỗ trợ từ các tổ chức bảo vệ người dùng', nextNode: 'end-danh-du', colorClass: 'bg-[#4f46e5] hover:bg-[#4338ca]' }
+      { text: 'Xóa bài viết', nextNode: 'end-tu-bo', colorClass: 'bg-indigo-600 hover:bg-[#ff5722]' },
+      { text: 'Tìm kiếm sự hỗ trợ từ các tổ chức bảo vệ người dùng', nextNode: 'end-danh-du', colorClass: 'bg-indigo-600 hover:bg-indigo-500' }
     ]
   },
   'end-tu-bo': {
