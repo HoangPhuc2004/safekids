@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router";
-import { PlayCircle, KeyRound, Trophy, Compass, ArrowRight, Sparkles, BookOpen, Star } from "lucide-react";
+import { KeyRound, Trophy, Compass, BookOpen, Star } from "lucide-react";
 import { useGameRoom } from "../../context/GameRoomContext";
 import { useState } from "react";
 import { useAuth } from "../../context/AuthContext";
@@ -81,34 +81,16 @@ export default function StudentHome() {
           </div>
 
           {/* Quick Action Grids */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <button 
-              onClick={() => navigate("/student/story-game")}
-              className="group relative overflow-hidden bg-gradient-to-br from-pink-500 to-rose-400 p-8 rounded-[2rem] shadow-lg text-white transition-all hover:shadow-pink-200 hover:-translate-y-1"
-            >
-              <div className="absolute -right-4 -bottom-4 opacity-20 group-hover:scale-125 transition-transform">
-                <PlayCircle size={120} />
+          <div className="grid grid-cols-1 gap-6">
+            <button onClick={() => navigate("/student/groups")} className="bg-white p-8 rounded-[2rem] shadow-sm border border-indigo-50 flex flex-col md:flex-row items-center md:items-start text-center md:text-left gap-6 hover:border-indigo-200 transition-all hover:shadow-lg hover:-translate-y-1 group">
+              <div className="w-20 h-20 bg-indigo-100 text-indigo-600 rounded-[1.5rem] flex items-center justify-center transition-transform group-hover:scale-110 shrink-0 shadow-inner">
+                <Compass size={40} strokeWidth={2.5} />
               </div>
-              <div className="relative z-10">
-                <div className="w-14 h-14 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center mb-4">
-                  <Sparkles size={28} />
-                </div>
-                <h3 className="font-black text-2xl mb-2">Game Cốt Truyện</h3>
-                <p className="text-pink-50 font-medium opacity-90">Hóa thân vào nhân vật xử lý các tình huống thực tế</p>
-                <div className="mt-6 flex items-center gap-2 font-black text-sm uppercase tracking-widest">
-                  Chơi ngay <ArrowRight size={16} />
-                </div>
+              <div className="flex-1 flex flex-col justify-center h-full pt-1">
+                <h3 className="font-black text-2xl text-gray-900 mb-2 group-hover:text-indigo-600 transition-colors">Nhóm Hỏi Đáp (Thảo luận)</h3>
+                <p className="text-gray-500 font-medium">Nơi chia sẻ, hỏi đáp và cùng nhau tìm hiểu kiến thức về an toàn học đường cùng cô giáo và các bạn.</p>
               </div>
             </button>
-
-            <div className="flex flex-col gap-4 h-full">
-              <button onClick={() => navigate("/student/groups")} className="bg-white p-6 rounded-3xl shadow-sm border border-indigo-50 flex flex-col items-center justify-center gap-3 hover:bg-indigo-50 transition-all hover:shadow-md group h-full">
-                <div className="w-14 h-14 bg-indigo-100 text-indigo-600 rounded-2xl flex items-center justify-center transition-transform group-hover:scale-110">
-                  <Compass size={28} />
-                </div>
-                <span className="text-sm font-black text-gray-700 text-center">NHÓM HỎI ĐÁP</span>
-              </button>
-            </div>
           </div>
         </div>
 
