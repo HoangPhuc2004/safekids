@@ -105,7 +105,7 @@ export default function LearningPathView() {
       </div>
 
       {/* Header Overlay */}
-      <div className="fixed top-0 w-full p-6 flex items-center justify-between z-50 bg-white/10 backdrop-blur-2xl border-b border-white/20 shadow-2xl">
+      <div className="fixed top-0 w-full p-6 flex items-center justify-between z-50 bg-emerald-800 shadow-xl border-b border-emerald-900">
         <div className="flex items-center gap-4">
             <button onClick={() => navigate(-1)} className="p-3 bg-white/20 hover:bg-white/40 rounded-2xl text-white transition-all shadow-xl">
                 <ChevronRight size={24} className="rotate-180" />
