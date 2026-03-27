@@ -1,5 +1,5 @@
 import { Outlet, NavLink } from "react-router";
-import { Home, Users, User, AlertTriangle, Shield, Menu, X, LogOut, Bell, PlusCircle, BarChart3 } from "lucide-react";
+import { Home, Users, User, AlertTriangle, Shield, Menu, X, LogOut, Bell, PlusCircle, BarChart3, BookOpen } from "lucide-react";
 import { useState } from "react";
 
 export default function TeacherLayout() {
@@ -7,6 +7,7 @@ export default function TeacherLayout() {
 
   const navItems = [
     { to: "/teacher", icon: <Home size={22} />, label: "Trang chủ", end: true },
+    { to: "/teacher/lectures", icon: <BookOpen size={22} />, label: "Bài giảng" },
     { to: "/teacher/groups", icon: <Users size={22} />, label: "Nhóm lớp" },
     { to: "/teacher/create-game", icon: <PlusCircle size={22} />, label: "Tạo Game" },
     { to: "/teacher/profile", icon: <User size={22} />, label: "Cá nhân" },

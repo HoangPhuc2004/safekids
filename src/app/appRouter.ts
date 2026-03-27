@@ -11,6 +11,7 @@ import GroupChat from "./views/shared/GroupChat";
 import ReportView from "./views/student/ReportView";
 import CreateGameView from "./views/teacher/CreateGameView";
 import TeacherGameLobby from "./views/teacher/TeacherGameLobby";
+import TeacherLecturesView from "./views/teacher/TeacherLecturesView";
 import ProfileView from "./views/shared/ProfileView";
 import StoryGameView from "./views/student/StoryGameView";
 import GameLobbyView from "./views/student/GameLobbyView";
@@ -40,6 +41,7 @@ export const router = createBrowserRouter([
       { path: "groups/:id", Component: GroupChat },
       { path: "create-game", Component: CreateGameView },
       { path: "game-lobby", Component: TeacherGameLobby },
+      { path: "lectures", Component: TeacherLecturesView },
       { path: "profile", Component: ProfileView },
     ],
   },
