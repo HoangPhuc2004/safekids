@@ -1,59 +1,58 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
-import { ChevronLeft, LayoutGrid, CheckCircle2, PlayCircle, Plus, Info, Sparkles, Wand2, Type, Database, Check } from "lucide-react";
-import { ImageWithFallback } from "../../components/figma/ImageWithFallback";
+import { ChevronLeft, PlayCircle, Plus, Info, Sparkles, Type, Database, Check } from "lucide-react";
 import { useGameRoom } from "../../context/GameRoomContext";
 
 export default function CreateGameView() {
   const navigate = useNavigate();
   const { createRoom } = useGameRoom();
-  const [selectedTemplate, setSelectedTemplate] = useState<string>("quiz");
-  const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
+  const [selectedStory, setSelectedStory] = useState<string | null>(null);
   const [gameName, setGameName] = useState("");
+  const [expandedModules, setExpandedModules] = useState<string[]>(["module-1"]);
 
-  const templates = [
+  const toggleModule = (id: string) => {
+    setExpandedModules(prev => 
+      prev.includes(id) ? prev.filter(m => m !== id) : [...prev, id]
+    );
+  };
+
+  const modules = [
     {
-      id: "quiz",
-      name: "Trắc nghiệm nhanh",
-      desc: "Kiểm tra kiến thức trực tiếp với phản hồi tức thì",
-      img: "https://images.unsplash.com/photo-1655704705321-3ac52dc67f70?w=600&h=400&fit=crop"
+      id: "module-1",
+      title: "Module 1: Nhận biết hành vi quấy rối",
+      desc: "Câu hỏi trắc nghiệm và tình huống xử lý về các hành vi không an toàn.",
+      stories: [
+        { id: "s1", title: "Cốt truyện: Chuyến dã ngoại", questions: 10, level: "Cơ bản" },
+        { id: "s2", title: "Cốt truyện: Người lạ mặt ở siêu thị", questions: 15, level: "Trung bình" }
+      ]
     },
     {
-      id: "match",
-      name: "Ghép thẻ bài",
-      desc: "Luyện tập nhận biết hình ảnh và khái niệm an toàn",
-      img: "https://images.unsplash.com/photo-1759868937448-423d3c7c8133?w=600&h=400&fit=crop"
-    },
-    {
-      id: "rescue",
-      name: "Giải cứu gấu bông",
-      desc: "Game nhập vai tương tác giúp trẻ rèn kỹ năng",
-      img: "https://images.unsplash.com/photo-1725221330595-af50615c1677?w=600&h=400&fit=crop"
+      id: "module-2",
+      title: "Module 2: Kỹ năng tự vệ",
+      desc: "Các kỹ năng phòng tránh và xử lý khi gặp tình huống nguy hiểm.",
+      stories: [
+        { id: "s3", title: "Cốt truyện: Bí mật bị đe dọa", questions: 12, level: "Nâng cao" },
+        { id: "s4", title: "Cốt truyện: Tin nhắn lạ", questions: 8, level: "Cơ bản" }
+      ]
     }
   ];
 
-  const videos = [
-    { id: "v1", title: "Bài 1: Nhận biết hành vi quấy rối", questions: 10, duration: "10 phút", level: "Cơ bản" },
-    { id: "v2", title: "Bài 2: Quy tắc đồ lót (PANTS)", questions: 15, duration: "15 phút", level: "Trung bình" },
-    { id: "v3", title: "Bài 3: Cách nói KHÔNG và tự vệ", questions: 12, duration: "12 phút", level: "Nâng cao" }
-  ];
-
   const handleCreateGame = () => {
-    if (!selectedVideo || !gameName) {
-      alert("Vui lòng nhập tên game và chọn video bài giảng!");
+    if (!selectedStory || !gameName) {
+      alert("Vui lòng nhập tên game và chọn cốt truyện!");
       return;
     }
     createRoom({
       teacherId: "t1",
       gameName,
-      template: selectedTemplate,
-      video: selectedVideo
+      template: "quiz",
+      video: selectedStory
     });
     navigate("/teacher/game-lobby");
   };
 
   return (
-    <div className="bg-transparent min-h-screen pb-32 flex flex-col font-sans">
+    <div className="bg-transparent min-h-screen pb-12 flex flex-col font-sans">
       {/* Premium Header */}
       <div className="bg-white/80 backdrop-blur-md px-6 py-4 sticky top-0 z-30 border-b border-indigo-50 flex items-center justify-between shadow-sm">
         <div className="flex items-center gap-4">
@@ -69,13 +68,12 @@ export default function CreateGameView() {
           <div className="flex -space-x-2">
             <div className="w-8 h-8 rounded-full bg-indigo-100 border-2 border-white flex items-center justify-center text-[10px] font-black text-indigo-600">1</div>
             <div className="w-8 h-8 rounded-full bg-gray-100 border-2 border-white flex items-center justify-center text-[10px] font-black text-gray-400">2</div>
-            <div className="w-8 h-8 rounded-full bg-gray-100 border-2 border-white flex items-center justify-center text-[10px] font-black text-gray-400">3</div>
           </div>
           <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Tiến trình tạo</span>
         </div>
       </div>
 
-      <div className="flex-1 max-w-6xl mx-auto w-full p-6 lg:p-10 space-y-12">
+      <div className="flex-1 max-w-5xl mx-auto w-full p-6 lg:p-10 space-y-12">
         {/* Step 1: Basic Info */}
         <section className="space-y-6">
           <div className="flex items-center gap-3">
@@ -92,7 +90,7 @@ export default function CreateGameView() {
             <label className="block text-xs font-black text-gray-400 uppercase tracking-widest mb-4">Tên trò chơi (Gợi nhớ cho cô)</label>
             <input 
               type="text" 
-              placeholder="VD: Ôn tập quy tắc 5 ngón tay - Lớp 5A..."
+              placeholder="VD: Ôn tập kỹ năng tự vệ - Lớp 5A..."
               value={gameName}
               onChange={(e) => setGameName(e.target.value)}
               className="w-full text-2xl font-black text-gray-800 bg-transparent border-b-4 border-indigo-50 focus:border-indigo-600 transition-all outline-none pb-4 placeholder:text-gray-200"
@@ -112,82 +110,69 @@ export default function CreateGameView() {
              <h2 className="text-2xl font-black text-gray-900 tracking-tight">2. Chọn kho tàng câu hỏi</h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {videos.map((vid) => (
-              <div 
-                key={vid.id}
-                onClick={() => setSelectedVideo(vid.id)}
-                className={`
-                  p-6 rounded-[2rem] border-4 cursor-pointer transition-all relative group
-                  ${selectedVideo === vid.id 
-                    ? 'border-indigo-600 bg-white shadow-2xl shadow-indigo-100 scale-[1.02]' 
-                    : 'border-transparent bg-white shadow-sm hover:border-indigo-100'}
-                `}
-              >
-                <div className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-6 transition-colors ${selectedVideo === vid.id ? 'bg-indigo-600 text-white' : 'bg-gray-100 text-gray-400'}`}>
-                   <PlayCircle size={28} />
+          <div className="space-y-4">
+            {modules.map(module => {
+              const isExpanded = expandedModules.includes(module.id);
+              return (
+                <div key={module.id} className="bg-white rounded-[2rem] border border-indigo-50 shadow-sm overflow-hidden">
+                  <button 
+                    onClick={() => toggleModule(module.id)}
+                    className="w-full text-left p-6 flex items-center justify-between hover:bg-indigo-50/50 transition-colors"
+                  >
+                    <div>
+                      <h3 className="text-xl font-black text-gray-900 mb-1">{module.title}</h3>
+                      <p className="text-gray-500 font-bold text-sm">{module.desc}</p>
+                    </div>
+                    <div className={`w-10 h-10 rounded-2xl flex items-center justify-center flex-shrink-0 transition-transform ${isExpanded ? 'bg-indigo-600 text-white' : 'bg-indigo-100 text-indigo-600'}`}>
+                      <span className="font-bold">{isExpanded ? '−' : '+'}</span>
+                    </div>
+                  </button>
+                  
+                  {isExpanded && (
+                    <div className="p-6 pt-0 bg-gray-50/30 border-t border-indigo-50">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+                        {module.stories.map((story) => (
+                          <div 
+                            key={story.id}
+                            onClick={() => setSelectedStory(story.id)}
+                            className={`
+                              p-5 rounded-3xl border-2 cursor-pointer transition-all relative group flex items-start gap-4
+                              ${selectedStory === story.id 
+                                ? 'border-indigo-600 bg-white shadow-xl shadow-indigo-100 scale-[1.02]' 
+                                : 'border-transparent bg-white shadow-sm hover:border-indigo-100'}
+                            `}
+                          >
+                            <div className={`w-12 h-12 rounded-2xl flex items-center justify-center transition-colors shrink-0 ${selectedStory === story.id ? 'bg-indigo-600 text-white' : 'bg-indigo-100 text-indigo-600'}`}>
+                              <PlayCircle size={24} />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <h4 className="font-black text-gray-800 text-base mb-2 leading-tight pr-6 truncate">{story.title}</h4>
+                              <div className="flex flex-wrap gap-2">
+                                <span className="text-[10px] font-black text-gray-500 uppercase tracking-tighter bg-gray-100 px-2 py-1 rounded-md">{story.questions} CÂU HỎI</span>
+                                <span className="text-[10px] font-black text-indigo-600 uppercase tracking-tighter bg-indigo-50 px-2 py-1 rounded-md">{story.level}</span>
+                              </div>
+                            </div>
+                            {selectedStory === story.id && (
+                              <div className="absolute top-4 right-4 w-6 h-6 bg-indigo-600 text-white rounded-full flex items-center justify-center shadow-md">
+                                <Check size={14} strokeWidth={4} />
+                              </div>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
-                <h3 className="font-black text-gray-800 text-lg mb-4 leading-tight">{vid.title}</h3>
-                <div className="flex flex-wrap gap-2">
-                   <span className="text-[10px] font-black text-gray-400 uppercase tracking-tighter bg-gray-50 px-2 py-1 rounded-md">{vid.questions} CÂU HỎI</span>
-                   <span className="text-[10px] font-black text-indigo-500 uppercase tracking-tighter bg-indigo-50 px-2 py-1 rounded-md">{vid.level}</span>
-                </div>
-                {selectedVideo === vid.id && (
-                  <div className="absolute top-6 right-6 w-8 h-8 bg-indigo-600 text-white rounded-full flex items-center justify-center shadow-lg">
-                    <Check size={18} strokeWidth={4} />
-                  </div>
-                )}
-              </div>
-            ))}
+              );
+            })}
           </div>
         </section>
 
-        {/* Step 3: Template Selection */}
-        <section className="space-y-6">
-          <div className="flex items-center gap-3">
-             <div className="w-10 h-10 bg-amber-500 text-white rounded-xl flex items-center justify-center shadow-lg shadow-amber-100">
-                <Wand2 size={20} />
-             </div>
-             <h2 className="text-2xl font-black text-gray-900 tracking-tight">3. Khoác áo cho trò chơi</h2>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {templates.map((tpl) => (
-              <div 
-                key={tpl.id}
-                onClick={() => setSelectedTemplate(tpl.id)}
-                className={`
-                  bg-white rounded-[2.5rem] overflow-hidden cursor-pointer border-4 transition-all relative group shadow-sm
-                  ${selectedTemplate === tpl.id 
-                    ? 'border-indigo-600 shadow-2xl shadow-indigo-100 scale-[1.02]' 
-                    : 'border-transparent hover:border-indigo-100'}
-                `}
-              >
-                <div className="h-48 relative overflow-hidden">
-                  <ImageWithFallback src={tpl.img} alt={tpl.name} className="absolute inset-0 w-full h-full object-cover transition-transform group-hover:scale-110 duration-700" />
-                  <div className={`absolute inset-0 bg-indigo-600/10 transition-opacity ${selectedTemplate === tpl.id ? 'opacity-100' : 'opacity-0'}`} />
-                </div>
-                <div className="p-8">
-                  <h3 className="text-xl font-black text-gray-900 mb-2">{tpl.name}</h3>
-                  <p className="text-sm text-gray-500 font-medium leading-relaxed">{tpl.desc}</p>
-                </div>
-                {selectedTemplate === tpl.id && (
-                  <div className="absolute top-6 right-6 bg-indigo-600 text-white p-2 rounded-xl shadow-xl">
-                    <CheckCircle2 size={24} />
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-        </section>
-      </div>
-
-      {/* Floating Final Action */}
-      <div className="fixed bottom-0 left-0 right-0 p-6 lg:p-10 pointer-events-none z-40">
-        <div className="max-w-5xl mx-auto w-full pointer-events-auto">
+        {/* Final Action */}
+        <div className="pt-4">
           <button 
             onClick={handleCreateGame}
-            className="w-full bg-gradient-to-r from-indigo-600 to-indigo-800 hover:from-indigo-700 hover:to-indigo-900 text-white font-black py-6 px-10 rounded-[2rem] shadow-[0_20px_50px_rgba(79,70,229,0.3)] flex items-center justify-between group transition-all transform active:scale-95"
+            className="w-full bg-gradient-to-r from-indigo-600 to-indigo-800 hover:from-indigo-700 hover:to-indigo-900 text-white font-black py-6 px-10 rounded-[2rem] shadow-xl shadow-indigo-200 flex items-center justify-between group transition-all transform active:scale-95"
           >
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center group-hover:rotate-12 transition-transform">
