@@ -25,8 +25,8 @@ const pathSteps: PathStep[] = [
   { id: 10, title: "Tổng kết: Em là Hiệp sĩ Nhí", status: "locked", stars: 0, reward: "Cúp Vàng", type: "quiz" },
 ];
 
-const BearIcon = ({ className }: { className?: string }) => (
-    <svg viewBox="0 0 24 24" className={className} fill="currentColor">
+const BearIcon = (props: React.SVGProps<SVGSVGElement>) => (
+    <svg viewBox="0 0 24 24" fill="currentColor" {...props}>
         <circle cx="12" cy="13" r="8" />
         <circle cx="7" cy="6" r="3" />
         <circle cx="17" cy="6" r="3" />
@@ -61,10 +61,13 @@ export default function LearningPathView() {
   };
 
   return (
-    <div className="min-h-screen bg-[#60b060] relative overflow-hidden flex flex-col font-sans">
+    <div 
+      className="min-h-screen relative overflow-hidden flex flex-col font-sans bg-cover bg-center bg-fixed" 
+      style={{ backgroundImage: "url('/Grass%20BG.png')" }}
+    >
       {/* Premium Background Layer */}
       <div className="absolute inset-0 pointer-events-none z-0">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,#80d080,transparent)] opacity-40"></div>
+        <div className="absolute inset-0 bg-black/10"></div>
         
         {/* Animated Sun */}
         <div className="absolute top-24 left-16 text-yellow-200 opacity-30 animate-pulse">
