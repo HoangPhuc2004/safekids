@@ -1,22 +1,19 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
-import { ArrowLeft, RefreshCw, ShieldCheck, AlertCircle, ChevronRight, Star, Heart, Share2 } from "lucide-react";
+import { ArrowLeft, ChevronRight, RefreshCw } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ImageWithFallback } from "../../components/figma/ImageWithFallback";
 
-type NodeId = 'start' | 'node2A' | 'node2B' | 'end1' | 'end2' | 'end3';
+type NodeId = 'start' | 'scene2' | 'node-phan-bac' | 'node-phot-lo' | 'end-tu-bo' | 'end-bao-canh-sat' | 'end-danh-du';
 
 interface StoryNode {
   id: NodeId;
-  title: string;
-  subtitle?: string;
+  title?: string;
   content: string;
   image: string;
   isEnding?: boolean;
   options?: {
     text: string;
     nextNode: NodeId;
-    icon?: React.ReactNode;
     colorClass?: string;
   }[];
 }
@@ -24,59 +21,59 @@ interface StoryNode {
 const storyData: Record<NodeId, StoryNode> = {
   start: {
     id: 'start',
-    title: 'TÌNH HUỐNG 1',
-    subtitle: 'Đối mặt với "Bão Mạng"',
-    content: 'Sau khi đăng một bài điều tra về đường dây cá độ, Linh bất ngờ nhận được hàng loạt bình luận công kích, chửi bới từ các tài khoản ảo.\n\nTrong tình huống này, Linh nên làm gì?',
-    image: 'https://images.unsplash.com/photo-1591522811280-a8759970b03f?w=1200&h=800&fit=crop',
+    content: 'Linh là một nữ nhà báo đang thực hiện bài điều tra về các trang web phát sóng bóng đá không bản quyền. Trong quá trình tìm hiểu, cô phát hiện nhiều trang web này liên kết với các nền tảng cá độ trực tuyến. Những nền tảng này đã khiến nhiều người rơi vào nợ nần, dẫn đến mâu thuẫn gia đình và nhiều hệ quả xã hội nghiêm trọng.\n\nSau nhiều tuần thu thập thông tin và phỏng vấn các nạn nhân, Linh đăng tải bài viết điều tra của mình trên trang báo. Chỉ trong vài giờ, bài viết thu hút sự chú ý lớn từ cộng đồng mạng. Nhiều người ủng hộ việc phanh phui vấn đề này.\n\nTuy nhiên, bên cạnh đó cũng xuất hiện những bình luận công kích cho rằng cô đang “phá hỏng thú vui xem bóng đá” hoặc “đang cố gây chú ý”. Linh đọc các bình luận và nhận ra cuộc tranh luận đang dần trở nên căng thẳng.',
+    image: 'character-default',
     options: [
-      { text: 'Phản bác lại các bình luận', nextNode: 'node2A', colorClass: 'bg-orange-600 hover:bg-orange-700' },
-      { text: 'Phớt lờ các bình luận', nextNode: 'node2B', colorClass: 'bg-indigo-600 hover:bg-indigo-700' }
+      { text: 'Tiếp tục', nextNode: 'scene2', colorClass: 'bg-indigo-600 hover:bg-indigo-700' }
     ]
   },
-  node2A: {
-    id: 'node2A',
-    title: 'TÌNH HUỐNG 2',
-    subtitle: 'Lời Đe Dọa',
+  scene2: {
+    id: 'scene2',
+    title: 'Phản ứng trước các bình luận công kích',
+    content: 'Sau khi bài báo được đăng, rất nhiều bình luận tiêu cực và công kích cá nhân nhắm vào Linh xuất hiện liên tiếp. Linh sẽ phải lựa chọn cách đối mặt với tình huống này.',
+    image: 'character-angry',
+    options: [
+      { text: 'Phản bác các bình luận', nextNode: 'node-phan-bac', colorClass: 'bg-[#ff5722] hover:bg-[#e64a19]' },
+      { text: 'Phớt lờ các bình luận', nextNode: 'node-phot-lo', colorClass: 'bg-[#4f46e5] hover:bg-[#4338ca]' }
+    ]
+  },
+  'node-phan-bac': {
+    id: 'node-phan-bac',
     content: 'Linh quyết định phản hồi và bảo vệ bài viết của mình. Việc này khiến cuộc tranh luận trở nên sôi nổi hơn và thu hút nhiều sự chú ý.\n\nTuy nhiên, phản ứng của cô cũng khiến một người đàn ông – chủ một hệ thống cá độ trực tuyến – chú ý. Hắn bắt đầu tìm kiếm thông tin cá nhân của Linh và gửi những tin nhắn đe dọa yêu cầu cô gỡ bài.\n\nLinh phải quyết định cách xử lý các tin nhắn đe dọa.',
-    image: 'https://images.unsplash.com/photo-1597888619263-41e68f36c16a?w=1200&h=800&fit=crop',
+    image: 'character-angry',
     options: [
-      { text: 'Báo cảnh sát và tìm sự hỗ trợ', nextNode: 'end2', colorClass: 'bg-green-600 hover:bg-green-700' },
-      { text: 'Xóa bài viết để được an toàn', nextNode: 'end1', colorClass: 'bg-rose-600 hover:bg-rose-700' }
+      { text: 'Báo cảnh sát và tìm sự hỗ trợ', nextNode: 'end-bao-canh-sat', colorClass: 'bg-[#4f46e5] hover:bg-[#4338ca]' },
+      { text: 'Xóa bài viết', nextNode: 'end-tu-bo', colorClass: 'bg-[#ff5722] hover:bg-[#e64a19]' }
     ]
   },
-  node2B: {
-    id: 'node2B',
-    title: 'TÌNH HUỐNG 2',
-    subtitle: 'Sự Công Kích Cá Nhân',
+  'node-phot-lo': {
+    id: 'node-phot-lo',
     content: 'Linh chọn cách không tham gia tranh luận và tiếp tục công việc.\n\nNhưng các tài khoản công kích bắt đầu chuyển sang trang cá nhân của cô. Họ đăng các bài viết bôi nhọ và chỉnh sửa hình ảnh của cô để lan truyền trên mạng.\n\nLinh phải đối mặt với việc hình ảnh cá nhân bị lan truyền trên mạng.',
-    image: 'https://images.unsplash.com/photo-1622084730216-39187f8bb9de?w=1200&h=800&fit=crop',
+    image: 'character-sad',
     options: [
-      { text: 'Xóa bài viết để ngừng bị tấn công', nextNode: 'end1', colorClass: 'bg-rose-600 hover:bg-rose-700' },
-      { text: 'Tìm kiếm sự hỗ trợ từ các tổ chức bảo vệ', nextNode: 'end3', colorClass: 'bg-pink-600 hover:bg-pink-700' }
+      { text: 'Xóa bài viết', nextNode: 'end-tu-bo', colorClass: 'bg-[#ff5722] hover:bg-[#e64a19]' },
+      { text: 'Tìm kiếm sự hỗ trợ từ các tổ chức bảo vệ người dùng', nextNode: 'end-danh-du', colorClass: 'bg-[#4f46e5] hover:bg-[#4338ca]' }
     ]
   },
-  end1: {
-    id: 'end1',
-    title: 'KẾT THÚC 1',
-    subtitle: 'Từ Bỏ Công Việc',
-    content: 'Vì lo sợ tình hình trở nên nguy hiểm hơn và áp lực quá lớn từ dư luận, Linh quyết định gỡ bài.\n\nÁp lực từ sự việc khiến cô suy sụp, quyết định rời khỏi tòa soạn và từ bỏ công việc báo chí mà cô từng đam mê.',
-    image: 'https://images.unsplash.com/photo-1584550915105-da8b91eff98c?w=1200&h=800&fit=crop',
+  'end-tu-bo': {
+    id: 'end-tu-bo',
+    title: 'Kết thúc 1 – Từ bỏ công việc',
+    content: 'Nếu Linh chọn xóa bài viết, áp lực từ sự việc khiến cô quyết định rời khỏi tòa soạn và từ bỏ công việc báo chí.',
+    image: 'character-sad',
     isEnding: true
   },
-  end2: {
-    id: 'end2',
-    title: 'KẾT THÚC 2',
-    subtitle: 'Công Lý Được Thực Thi',
-    content: 'Linh bình tĩnh lưu lại tất cả bằng chứng đe dọa và báo cáo sự việc với cơ quan chức năng.\n\nCơ quan chức năng đã vào cuộc điều tra và bắt giữ người đứng sau hệ thống cá độ đã đe dọa cô. Linh tiếp tục công việc điều tra của mình với sự bảo vệ của pháp luật.',
-    image: 'https://images.unsplash.com/photo-1763569378571-50ef8417b15f?w=1200&h=800&fit=crop',
+  'end-bao-canh-sat': {
+    id: 'end-bao-canh-sat',
+    title: 'Kết thúc 2 – Công lý được thực thi',
+    content: 'Nếu Linh báo cảnh sát, cơ quan chức năng điều tra và bắt giữ người đứng sau hệ thống cá độ đã đe dọa cô. Linh tiếp tục công việc điều tra của mình.',
+    image: 'character-happy',
     isEnding: true
   },
-  end3: {
-    id: 'end3',
-    title: 'KẾT THÚC 3',
-    subtitle: 'Danh Dự Được Bảo Vệ',
-    content: 'Linh liên hệ với các tổ chức hỗ trợ xử lý nội dung xâm phạm hình ảnh trên mạng và cung cấp các bằng chứng.\n\nCác bài đăng bôi nhọ và hình ảnh bị chỉnh sửa dần được gỡ bỏ khỏi các nền tảng. Linh tiếp tục làm việc và nhận được sự ủng hộ mạnh mẽ từ cộng đồng.',
-    image: 'https://images.unsplash.com/photo-1768244016477-78da64149a23?w=1200&h=800&fit=crop',
+  'end-danh-du': {
+    id: 'end-danh-du',
+    title: 'Kết thúc 3 – Danh dự được bảo vệ',
+    content: 'Nếu Linh tìm kiếm sự hỗ trợ từ các tổ chức bảo vệ người dùng, các bài đăng bôi nhọ và hình ảnh bị chỉnh sửa dần được gỡ bỏ. Linh tiếp tục làm việc và nhận được sự ủng hộ từ cộng đồng.',
+    image: 'character-happy',
     isEnding: true
   }
 };
@@ -96,156 +93,92 @@ export default function StoryGameView() {
   };
 
   return (
-    <div className="bg-indigo-950 min-h-screen flex flex-col font-sans overflow-hidden">
-      {/* Cinematic Header Overlay */}
-      <div className="absolute top-0 w-full p-6 flex items-center justify-between z-40">
+    <div className="min-h-screen bg-[#1b193f] relative flex items-center justify-center p-6 lg:p-12 font-sans overflow-hidden">
+      {/* Background Decor */}
+      <div className="absolute top-0 right-0 w-full h-full bg-gradient-to-br from-indigo-950 to-[#1b193f] z-0" />
+      
+      {/* HUD - Header controls */}
+      <div className="absolute top-6 left-6 z-40">
         <button 
           onClick={() => navigate(-1)}
-          className="p-3 bg-black/20 backdrop-blur-xl border border-white/10 rounded-2xl text-white hover:bg-white/20 transition-all shadow-2xl"
+          className="w-12 h-12 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center text-white transition-colors backdrop-blur-md border border-white/20 shadow-lg"
         >
           <ArrowLeft size={24} />
         </button>
-        <div className="px-6 py-2 bg-white/10 backdrop-blur-xl border border-white/10 rounded-full text-white font-black text-xs tracking-[0.2em] uppercase">
-          Story Challenge
-        </div>
-        <div className="flex gap-2">
-           <button className="p-3 bg-black/20 backdrop-blur-md border border-white/10 rounded-2xl text-white">
-              <Heart size={20} />
-           </button>
-        </div>
       </div>
 
       <AnimatePresence mode="wait">
         <motion.div
           key={currentNode.id}
-          initial={{ opacity: 0, scale: 1.05 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 0.95 }}
-          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-          className="flex-1 flex flex-col md:flex-row h-full overflow-hidden"
+          initial={{ opacity: 0, scale: 0.98, y: 10 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          exit={{ opacity: 0, scale: 1.02, y: -10 }}
+          transition={{ duration: 0.5, ease: "easeOut" }}
+          className="w-full max-w-6xl flex flex-col lg:flex-row items-stretch gap-8 lg:gap-16 z-10"
         >
-          {/* Visual Column / Area */}
-          <div className="relative h-[40vh] md:h-[100%] lg:w-1/2 flex-shrink-0 group overflow-hidden bg-indigo-950/80 flex flex-col justify-between items-center z-10">
-            {/* Title & Subtitle - Moved to top left */}
-            <div className="absolute top-0 w-full p-8 lg:p-12 z-20 mt-16 lg:mt-24 pointer-events-none">
-               <motion.div
-                initial={{ x: -20, opacity: 0 }}
-                animate={{ x: 0, opacity: 1 }}
-                transition={{ delay: 0.4 }}
-              >
-                <div className="inline-flex items-center gap-2 px-5 py-2 bg-indigo-500/90 text-white rounded-full text-xs font-black tracking-[0.1em] uppercase mb-4 shadow-xl border border-white/10 pointer-events-auto">
-                  {currentNode.isEnding ? <ShieldCheck size={16} /> : <Star size={16} />}
-                  {currentNode.title}
-                </div>
-                <h1 className="text-4xl lg:text-[3.25rem] font-black text-white leading-[1.1] drop-shadow-2xl">
-                  {currentNode.subtitle}
-                </h1>
-              </motion.div>
-            </div>
-
-            {/* Interactive Character Overhead */}
-            <div className="absolute bottom-0 w-full flex justify-center z-10 pointer-events-none">
-              <motion.div 
-                className="relative cursor-pointer pointer-events-auto group/character w-full flex justify-center"
-                initial={{ y: 50, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ duration: 0.6, type: "spring", damping: 15 }}
-                whileHover={{ scale: 1.05, y: -20 }}
-              >
-                {/* Speech Bubble */}
-                <div className="absolute -top-10 lg:-top-16 left-1/2 -translate-x-1/2 bg-white text-indigo-900 px-6 py-4 rounded-3xl rounded-bl-md font-bold text-base lg:text-xl shadow-2xl opacity-0 translate-y-4 group-hover/character:opacity-100 group-hover/character:translate-y-0 transition-all duration-300 whitespace-nowrap z-30 pointer-events-none border-4 border-indigo-100/50">
-                  <span className="animate-pulse inline-block mr-2">💭</span>
-                  Trời ơi, đau đầu quá!
-                  <div className="absolute -bottom-3 left-8 w-6 h-6 bg-white border-b-4 border-r-4 border-indigo-100/50 transform rotate-45"></div>
-                </div>
-                
-                {/* The Character */}
-                <img 
-                  src="/character-sad.png" 
-                  alt="Story Character" 
-                  className="w-[85%] lg:w-[130%] max-w-[350px] lg:max-w-[700px] object-contain drop-shadow-[0_20px_50px_rgba(0,0,0,0.4)] filter hover:brightness-110 hover:drop-shadow-[0_0_50px_rgba(99,102,241,0.6)] transition-all duration-300 pointer-events-auto origin-bottom translate-y-[15%]"
-                />
-              </motion.div>
+          {/* Left: Image Box */}
+          <div className="w-full lg:w-5/12 flex-shrink-0 flex items-center justify-center">
+            <div className="w-full aspect-square max-w-md bg-white rounded-[2.5rem] lg:rounded-[3rem] p-8 lg:p-12 flex items-center justify-center shadow-2xl relative overflow-hidden">
+              <img 
+                src={`/${currentNode.image}.png`} 
+                alt="Story Character" 
+                className="w-full h-full object-contain filter drop-shadow-xl z-10"
+              />
             </div>
           </div>
 
-          {/* Narrative & Interaction Column */}
-          <div className="flex-1 bg-indigo-950 lg:h-full flex flex-col items-center justify-center p-8 lg:p-20 relative">
-            <div className="max-w-xl w-full space-y-12">
-              <motion.div 
-                initial={{ y: 20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.6 }}
-                className="prose prose-invert prose-lg"
-              >
-                {currentNode.content.split('\n\n').map((paragraph, idx) => (
-                  <p key={idx} className="text-indigo-100/80 font-medium leading-relaxed text-xl lg:text-2xl drop-shadow-sm">
+          {/* Right: Content & Choices box */}
+          <div className="w-full lg:w-7/12 flex flex-col justify-center py-6">
+            <div className="mb-10 text-white">
+              {currentNode.title && (
+                <h2 className="text-2xl lg:text-3xl font-black mb-6 text-white leading-tight">
+                  {currentNode.title}
+                </h2>
+              )}
+              <div className="space-y-4">
+                {currentNode.content.split('\n\n').map((paragraph, index) => (
+                  <p key={index} className="text-lg lg:text-xl text-indigo-100/90 font-medium leading-relaxed">
                     {paragraph}
                   </p>
                 ))}
-              </motion.div>
+              </div>
+            </div>
 
-              <motion.div 
-                initial={{ y: 20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.8 }}
-                className="space-y-4"
-              >
-                {!currentNode.isEnding ? (
-                  <div className="grid grid-cols-1 gap-4">
-                    {currentNode.options?.map((option, index) => (
-                      <button
-                        key={index}
-                        onClick={() => handleOptionClick(option.nextNode)}
-                        className={`
-                          group w-full p-6 lg:p-8 rounded-[2rem] text-white font-black text-lg lg:text-xl shadow-2xl transition-all 
-                          flex items-center justify-between transform hover:scale-[1.02] active:scale-95 border-2 border-white/5
-                          ${option.colorClass || 'bg-white/10 hover:bg-white/20'}
-                        `}
-                      >
-                        <span className="tracking-tight">{option.text}</span>
-                        <div className="w-12 h-12 rounded-2xl bg-white/20 flex items-center justify-center group-hover:bg-white group-hover:text-indigo-900 transition-all">
-                          <ChevronRight size={24} strokeWidth={3} />
-                        </div>
-                      </button>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="space-y-8">
-                    <div className={`p-8 rounded-[2.5rem] border-2 bg-white/5 backdrop-blur-md flex flex-col gap-4 ${currentNode.id === 'end1' ? 'border-rose-500/30' : 'border-green-500/30'}`}>
-                      <div className="flex items-center gap-3">
-                        {currentNode.id === 'end1' ? (
-                          <AlertCircle className="text-rose-500" size={32} />
-                        ) : (
-                          <ShieldCheck className="text-green-500" size={32} />
-                        )}
-                        <h3 className="text-xl font-black text-white tracking-tight uppercase">Bài học cho chúng ta</h3>
-                      </div>
-                      <p className="text-indigo-100/70 font-bold leading-relaxed">
-                        {currentNode.id === 'end1' 
-                          ? 'Đôi khi áp lực trên mạng có thể đánh gục chúng ta. Tuy nhiên, im lặng hoặc nhượng bộ không phải lúc nào cũng là giải pháp tốt nhất. Hãy luôn nhớ rằng em có sự hỗ trợ từ gia đình và nhà trường.' 
-                          : 'Việc nhờ đến sự can thiệp của cơ quan chức năng hoặc tổ chức bảo vệ là cách giải quyết an toàn và đúng đắn nhất khi đối mặt với bạo lực mạng. Em là một chiến binh dũng cảm!'}
-                      </p>
+            <div className="space-y-4 w-full">
+              {!currentNode.isEnding ? (
+                currentNode.options?.map((option, index) => (
+                  <button
+                    key={index}
+                    onClick={() => handleOptionClick(option.nextNode)}
+                    className={`
+                      w-full p-6 lg:p-7 rounded-[2rem] font-black text-xl text-white shadow-xl 
+                      flex items-center justify-between transition-all transform hover:scale-[1.02] active:scale-95
+                      ${option.colorClass} border border-white/10
+                    `}
+                  >
+                    <span className="text-left pr-4">{option.text}</span>
+                    <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center shrink-0">
+                      <ChevronRight size={24} />
                     </div>
-                    
-                    <div className="flex flex-col sm:flex-row gap-4">
-                      <button
-                        onClick={handleRestart}
-                        className="flex-1 p-6 rounded-[2rem] bg-white text-indigo-900 font-black text-lg shadow-2xl hover:bg-indigo-50 transition-all flex items-center justify-center gap-3"
-                      >
-                        <RefreshCw size={24} strokeWidth={3} />
-                        CHƠI LẠI
-                      </button>
-                      <button
-                        onClick={() => navigate('/student')}
-                        className="flex-1 p-6 rounded-[2rem] bg-indigo-500 hover:bg-indigo-600 text-white font-black text-lg shadow-2xl transition-all flex items-center justify-center gap-3"
-                      >
-                        VỀ TRANG CHỦ
-                      </button>
-                    </div>
-                  </div>
-                )}
-              </motion.div>
+                  </button>
+                ))
+              ) : (
+                <div className="flex flex-col sm:flex-row gap-4 mt-8">
+                  <button
+                    onClick={handleRestart}
+                    className="flex-1 p-6 rounded-[2rem] bg-indigo-500 hover:bg-indigo-600 border border-white/20 text-white font-black text-lg shadow-xl hover:shadow-2xl transition-all flex items-center justify-center gap-3 transform hover:scale-[1.02] active:scale-95"
+                  >
+                    <RefreshCw size={24} strokeWidth={3} />
+                    CHƠI LẠI
+                  </button>
+                  <button
+                    onClick={() => navigate('/student')}
+                    className="flex-1 p-6 rounded-[2rem] bg-white text-indigo-900 font-black text-lg shadow-xl hover:shadow-2xl hover:bg-indigo-50 transition-all flex items-center justify-center transform hover:scale-[1.02] active:scale-95"
+                  >
+                    VỀ TRANG CHỦ
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         </motion.div>
