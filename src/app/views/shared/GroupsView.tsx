@@ -129,16 +129,18 @@ export default function GroupsView() {
         </div>
         
         {/* Support Section for Desktop */}
-        <div className="mt-16 bg-white p-8 rounded-[3rem] border border-dashed border-indigo-200 flex flex-col items-center text-center">
-          <div className="w-20 h-20 bg-pink-50 text-pink-500 rounded-full flex items-center justify-center mb-6">
-            <MessageCircle size={32} />
+        {!isTeacher && (
+          <div className="mt-16 bg-white p-8 rounded-[3rem] border border-dashed border-indigo-200 flex flex-col items-center text-center">
+            <div className="w-20 h-20 bg-pink-50 text-pink-500 rounded-full flex items-center justify-center mb-6">
+              <MessageCircle size={32} />
+            </div>
+            <h3 className="font-black text-xl text-gray-800 mb-2">Cần tạo nhóm thảo luận riêng?</h3>
+            <p className="text-gray-500 font-medium mb-6 max-w-md">Nếu em muốn trao đổi riêng với chuyên gia hoặc cô giáo, hãy nhấn vào nút bên dưới.</p>
+            <button className="px-8 py-3 bg-indigo-50 text-indigo-600 font-black text-xs uppercase tracking-widest rounded-xl hover:bg-indigo-100 transition-all">
+              Yêu cầu tư vấn 1-1
+            </button>
           </div>
-          <h3 className="font-black text-xl text-gray-800 mb-2">Cần tạo nhóm thảo luận riêng?</h3>
-          <p className="text-gray-500 font-medium mb-6 max-w-md">Nếu em muốn trao đổi riêng với chuyên gia hoặc cô giáo, hãy nhấn vào nút bên dưới.</p>
-          <button className="px-8 py-3 bg-indigo-50 text-indigo-600 font-black text-xs uppercase tracking-widest rounded-xl hover:bg-indigo-100 transition-all">
-            Yêu cầu tư vấn 1-1
-          </button>
-        </div>
+        )}
       </div>
 
       {/* Create Group Modal */}
