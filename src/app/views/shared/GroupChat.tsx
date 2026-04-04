@@ -1,12 +1,17 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router";
-import { ArrowLeft, Send, Image as ImageIcon, Smile, MoreVertical, Users, ShieldCheck, Search, Paperclip, Mic } from "lucide-react";
+import { ArrowLeft, Send, Smile, MoreVertical, ShieldCheck, Search, Paperclip, Mic, Edit2, Trash2, X } from "lucide-react";
 
 export default function GroupChat() {
   const navigate = useNavigate();
   const location = useLocation();
   const isTeacher = location.pathname.startsWith("/teacher");
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  
+  const [groupName, setGroupName] = useState("Nhóm Hỗ Trợ 5A");
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isRenameModalOpen, setIsRenameModalOpen] = useState(false);
+  const [newGroupName, setNewGroupName] = useState(groupName);
   
   const [newMessage, setNewMessage] = useState("");
   const [messages, setMessages] = useState([
@@ -40,8 +45,21 @@ export default function GroupChat() {
     setNewMessage("");
   };
 
+  const handleRenameGroup = () => {
+    if (!newGroupName.trim()) return;
+    setGroupName(newGroupName);
+    setIsRenameModalOpen(false);
+    setIsMenuOpen(false);
+  };
+
+  const handleDeleteGroup = () => {
+    if (window.confirm("Bạn có chắc chắn muốn xoá nhóm này không?")) {
+      navigate(-1);
+    }
+  };
+
   return (
-    <div className="bg-white flex flex-col h-screen font-sans border-x border-indigo-50 max-w-7xl mx-auto shadow-2xl">
+    <div className="bg-white flex flex-col h-screen font-sans border-x border-indigo-50 max-w-7xl mx-auto shadow-2xl relative">
       {/* Premium Chat Header */}
       <div className="bg-white/80 backdrop-blur-md px-6 py-4 sticky top-0 z-30 border-b border-indigo-50 flex items-center justify-between shadow-sm">
         <div className="flex items-center gap-4">
@@ -50,10 +68,10 @@ export default function GroupChat() {
           </button>
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 bg-gradient-to-br from-indigo-50 to-pink-50 rounded-2xl flex items-center justify-center text-indigo-600 font-black shadow-inner">
-               5A
+               {groupName.substring(groupName.length > 2 ? groupName.length - 2 : 0).toUpperCase()}
             </div>
             <div>
-              <h1 className="font-black text-gray-800 text-lg tracking-tight">Nhóm Hỗ Trợ 5A</h1>
+              <h1 className="font-black text-gray-800 text-lg tracking-tight">{groupName}</h1>
               <div className="flex items-center gap-2">
                 <span className="flex h-2 w-2 rounded-full bg-green-500 animate-pulse"></span>
                 <p className="text-[10px] text-gray-400 font-black uppercase tracking-widest leading-none">36 Thành viên trực tuyến</p>
@@ -62,18 +80,42 @@ export default function GroupChat() {
           </div>
         </div>
         
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 relative">
           <button className="hidden md:flex p-2.5 text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-xl transition-all">
             <Search size={22} />
           </button>
-          <button className="p-2.5 text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-xl transition-all">
-            <MoreVertical size={22} />
-          </button>
+          {isTeacher && (
+            <button 
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="p-2.5 text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-xl transition-all"
+            >
+              <MoreVertical size={22} />
+            </button>
+          )}
+
+          {/* Teacher Group Actions Dropdown */}
+          {isMenuOpen && isTeacher && (
+             <div className="absolute top-12 right-0 bg-white border border-indigo-50 shadow-xl rounded-xl w-48 py-2 z-50 animate-in fade-in slide-in-from-top-2 duration-200">
+                <button 
+                  onClick={() => { setIsRenameModalOpen(true); setIsMenuOpen(false); setNewGroupName(groupName); }}
+                  className="w-full text-left px-4 py-2 text-sm font-medium text-gray-700 hover:bg-indigo-50 flex items-center gap-2 transition-colors"
+                >
+                  <Edit2 size={16} /> Đổi tên nhóm
+                </button>
+                <div className="h-px bg-gray-100 my-1 mx-2"></div>
+                <button 
+                  onClick={() => { handleDeleteGroup(); setIsMenuOpen(false); }}
+                  className="w-full text-left px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-50 flex items-center gap-2 transition-colors"
+                >
+                  <Trash2 size={16} /> Xóa nhóm
+                </button>
+             </div>
+          )}
         </div>
       </div>
 
       {/* Chat Messages Area */}
-      <div className="flex-1 overflow-y-auto p-6 space-y-8 bg-indigo-50/20 pb-10">
+      <div className="flex-1 overflow-y-auto p-6 space-y-8 bg-indigo-50/20 pb-10" onClick={() => setIsMenuOpen(false)}>
         <div className="flex flex-col items-center mb-10">
           <div className="bg-white/80 backdrop-blur-sm border border-indigo-100 px-6 py-3 rounded-full shadow-sm flex items-center gap-3 max-w-md">
             <ShieldCheck size={20} className="text-indigo-600" />
@@ -120,7 +162,7 @@ export default function GroupChat() {
       </div>
 
       {/* Premium Message Input */}
-      <div className="p-4 lg:p-6 bg-white border-t border-indigo-50">
+      <div className="p-4 lg:p-6 bg-white border-t border-indigo-50" onClick={() => setIsMenuOpen(false)}>
         <div className="bg-gray-50 rounded-[2rem] p-2 flex items-center gap-2 border-2 border-transparent focus-within:border-indigo-100 focus-within:bg-white transition-all shadow-inner">
           <div className="flex items-center gap-1 pl-2">
             <button className="p-3 text-gray-400 hover:text-indigo-600 hover:bg-white rounded-full transition-all">
@@ -158,6 +200,42 @@ export default function GroupChat() {
           </div>
         </div>
       </div>
+
+      {/* Rename Group Modal */}
+      {isRenameModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-gray-900/60 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="bg-white rounded-[2rem] w-full max-w-md p-6 shadow-2xl relative animate-in zoom-in-95 duration-200">
+            <button 
+              onClick={() => setIsRenameModalOpen(false)}
+              className="absolute top-4 right-4 p-2 text-gray-400 hover:text-gray-600 bg-gray-50 hover:bg-gray-100 rounded-full transition-all"
+            >
+              <X size={20} />
+            </button>
+            <h2 className="text-2xl font-black text-gray-800 mb-2 text-center mt-2">Đổi tên nhóm</h2>
+            <p className="text-gray-500 text-center text-sm font-medium mb-6">Nhập tên mới cho nhóm lớp này.</p>
+            
+            <div className="space-y-4">
+              <div>
+                <label className="block text-xs font-black text-gray-500 uppercase tracking-widest mb-2">Tên nhóm mới</label>
+                <input 
+                  type="text" 
+                  value={newGroupName}
+                  onChange={(e) => setNewGroupName(e.target.value)}
+                  onKeyPress={(e) => e.key === 'Enter' && handleRenameGroup()}
+                  placeholder="Ví dụ: Nhóm 1, Nhóm Tiếng Anh..."
+                  className="w-full bg-gray-50 border-2 border-transparent focus:border-indigo-100 focus:bg-white rounded-xl py-3 px-4 outline-none font-medium text-gray-700 transition-all"
+                />
+              </div>
+              <button 
+                onClick={handleRenameGroup}
+                className="w-full bg-indigo-600 text-white font-black py-4 rounded-xl hover:bg-indigo-700 transition-all active:scale-95 shadow-lg shadow-indigo-200"
+              >
+                Lưu thay đổi
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

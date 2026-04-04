@@ -60,10 +60,6 @@ export default function GroupsView() {
     setIsCreateModalOpen(false);
   };
 
-  const handleDeleteGroup = (e: React.MouseEvent, id: string) => {
-    e.stopPropagation();
-    setGroups(groups.filter(g => g.id !== id));
-  };
 
   const handleOpenManageMembers = (e: React.MouseEvent, id: string) => {
     e.stopPropagation();
@@ -182,13 +178,6 @@ export default function GroupsView() {
                       title="Quản lý thành viên"
                     >
                       <Users size={20} />
-                    </button>
-                    <button 
-                      onClick={(e) => handleDeleteGroup(e, group.id)}
-                      className="p-2.5 text-gray-300 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all"
-                      title="Xóa nhóm"
-                    >
-                      <Trash2 size={20} />
                     </button>
                   </>
                 )}
