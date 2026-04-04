@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router";
-import { ArrowLeft, Plus, MessageCircle, Users, ShieldCheck, Search, Clock, ChevronRight, Trash2, X, PlusCircle } from "lucide-react";
+import { ArrowLeft, Plus, MessageCircle, ShieldCheck, Search, Clock, ChevronRight, X } from "lucide-react";
 
 export default function GroupsView() {
   const navigate = useNavigate();
@@ -15,10 +15,6 @@ export default function GroupsView() {
       time: "10:30 AM", 
       unread: 2, 
       avatar: "5A",
-      members: [
-        { id: "m1", name: "Minh Đức" },
-        { id: "m2", name: "Lan Anh" },
-      ]
     },
     { 
       id: "group-2", 
@@ -27,18 +23,11 @@ export default function GroupsView() {
       time: "Hôm qua", 
       unread: 0, 
       avatar: "K5",
-      members: [
-        { id: "m3", name: "Hoàng Phong" },
-        { id: "m4", name: "Bảo Thy" },
-      ]
     },
   ]);
 
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [newGroupName, setNewGroupName] = useState("");
-
-  const [manageMembersGroupId, setManageMembersGroupId] = useState<string | null>(null);
-  const [newMemberName, setNewMemberName] = useState("");
 
   const handleCreateGroup = () => {
     if (!newGroupName.trim()) return;
@@ -49,50 +38,11 @@ export default function GroupsView() {
       time: "Vừa xong",
       unread: 0,
       avatar: newGroupName.substring(0, 2).toUpperCase(),
-      members: [
-        { id: `m1-${Date.now()}`, name: "Nguyễn Văn A" },
-        { id: `m2-${Date.now()}`, name: "Trần Thị B" },
-        { id: `m3-${Date.now()}`, name: "Lê Văn C" },
-      ]
     };
     setGroups([newGroup, ...groups]);
     setNewGroupName("");
     setIsCreateModalOpen(false);
   };
-
-
-  const handleOpenManageMembers = (e: React.MouseEvent, id: string) => {
-    e.stopPropagation();
-    setManageMembersGroupId(id);
-  };
-
-  const handleAddMember = () => {
-    if (!newMemberName.trim() || !manageMembersGroupId) return;
-    setGroups(groups.map(g => {
-      if (g.id === manageMembersGroupId) {
-        return {
-          ...g,
-          members: [...g.members, { id: `m-${Date.now()}`, name: newMemberName }]
-        };
-      }
-      return g;
-    }));
-    setNewMemberName("");
-  };
-
-  const handleRemoveMember = (groupId: string, memberId: string) => {
-    setGroups(groups.map(g => {
-      if (g.id === groupId) {
-        return {
-          ...g,
-          members: g.members.filter(m => m.id !== memberId)
-        };
-      }
-      return g;
-    }));
-  };
-
-  const activeGroup = groups.find(g => g.id === manageMembersGroupId);
 
   return (
     <div className="bg-transparent min-h-screen pb-24 flex flex-col font-sans relative">
@@ -170,17 +120,6 @@ export default function GroupsView() {
               </div>
               
               <div className="flex items-center gap-1 ml-2">
-                {isTeacher && (
-                  <>
-                    <button 
-                      onClick={(e) => handleOpenManageMembers(e, group.id)}
-                      className="p-2.5 text-indigo-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-xl transition-all"
-                      title="Quản lý thành viên"
-                    >
-                      <Users size={20} />
-                    </button>
-                  </>
-                )}
                 <div className="text-gray-300 group-hover:text-pink-400 transition-colors ml-1">
                   <ChevronRight size={24} strokeWidth={3} />
                 </div>
@@ -213,7 +152,7 @@ export default function GroupsView() {
               <X size={20} />
             </button>
             <h2 className="text-2xl font-black text-gray-800 mb-2 text-center mt-2">Tạo nhóm lớp mới</h2>
-            <p className="text-gray-500 text-center text-sm font-medium mb-6">Nhập tên nhóm để tạo mới và mô phỏng một vài thành viên.</p>
+            <p className="text-gray-500 text-center text-sm font-medium mb-6">Nhập tên nhóm để tạo mới.</p>
             
             <div className="space-y-4">
               <div>
@@ -233,75 +172,6 @@ export default function GroupsView() {
                 Tạo nhóm
               </button>
             </div>
-          </div>
-        </div>
-      )}
-
-      {/* Manage Members Modal */}
-      {manageMembersGroupId && activeGroup && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-gray-900/60 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="bg-white rounded-[2rem] w-full max-w-md p-6 shadow-2xl relative flex flex-col max-h-[80vh] animate-in zoom-in-95 duration-200">
-            <button 
-              onClick={() => setManageMembersGroupId(null)}
-              className="absolute top-4 right-4 p-2 text-gray-400 hover:text-gray-600 bg-gray-50 hover:bg-gray-100 rounded-full transition-all z-10"
-            >
-              <X size={20} />
-            </button>
-            <div className="text-center mb-6 pt-2">
-              <div className="w-16 h-16 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center font-black text-xl mx-auto mb-3">
-                {activeGroup.avatar}
-              </div>
-              <h2 className="text-xl font-black text-gray-800">{activeGroup.name}</h2>
-              <p className="text-xs font-bold text-indigo-500 mt-1">{activeGroup.members.length} THÀNH VIÊN</p>
-            </div>
-
-            <div className="flex items-center gap-2 mb-4 bg-gray-50 p-2 rounded-xl">
-              <input 
-                type="text" 
-                value={newMemberName}
-                onChange={(e) => setNewMemberName(e.target.value)}
-                onKeyPress={(e) => e.key === 'Enter' && handleAddMember()}
-                placeholder="Thêm thành viên mới..."
-                className="flex-1 bg-transparent border-none outline-none px-2 font-medium text-sm text-gray-700"
-              />
-              <button 
-                onClick={handleAddMember}
-                className="p-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-all"
-              >
-                <PlusCircle size={20} />
-              </button>
-            </div>
-
-            <div className="flex-1 overflow-y-auto pr-2 space-y-2">
-              {activeGroup.members.map(member => (
-                <div key={member.id} className="flex items-center justify-between p-3 bg-white border border-gray-100 rounded-xl shadow-sm hover:border-indigo-100 transition-all">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-gradient-to-br from-indigo-50 to-pink-50 rounded-full flex items-center justify-center font-black text-sm text-indigo-600">
-                      {member.name.substring(0, 1).toUpperCase()}
-                    </div>
-                    <span className="font-bold text-gray-700 text-sm">{member.name}</span>
-                  </div>
-                  <button 
-                    onClick={() => handleRemoveMember(activeGroup.id, member.id)}
-                    className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all"
-                  >
-                    <Trash2 size={18} />
-                  </button>
-                </div>
-              ))}
-              {activeGroup.members.length === 0 && (
-                <div className="py-8 text-center text-gray-400 font-medium text-sm">
-                  Chưa có thành viên nào
-                </div>
-              )}
-            </div>
-            
-            <button 
-              onClick={() => setManageMembersGroupId(null)}
-              className="mt-6 w-full py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-black rounded-xl transition-all"
-            >
-              Xong
-            </button>
           </div>
         </div>
       )}

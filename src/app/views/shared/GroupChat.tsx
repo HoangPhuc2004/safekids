@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router";
-import { ArrowLeft, Send, Smile, MoreVertical, ShieldCheck, Search, Paperclip, Mic, Edit2, Trash2, X } from "lucide-react";
+import { ArrowLeft, Send, Smile, MoreVertical, ShieldCheck, Search, Paperclip, Mic, Edit2, Trash2, Users, PlusCircle, X } from "lucide-react";
 
 export default function GroupChat() {
   const navigate = useNavigate();
@@ -12,6 +12,14 @@ export default function GroupChat() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isRenameModalOpen, setIsRenameModalOpen] = useState(false);
   const [newGroupName, setNewGroupName] = useState(groupName);
+
+  const [members, setMembers] = useState([
+    { id: "m1", name: "Nguyễn Văn A" },
+    { id: "m2", name: "Trần Thị B" },
+    { id: "m3", name: "Lê Văn C" },
+  ]);
+  const [isManageMembersModalOpen, setIsManageMembersModalOpen] = useState(false);
+  const [newMemberName, setNewMemberName] = useState("");
   
   const [newMessage, setNewMessage] = useState("");
   const [messages, setMessages] = useState([
@@ -58,6 +66,16 @@ export default function GroupChat() {
     }
   };
 
+  const handleAddMember = () => {
+    if (!newMemberName.trim()) return;
+    setMembers([...members, { id: `m-${Date.now()}`, name: newMemberName }]);
+    setNewMemberName("");
+  };
+
+  const handleRemoveMember = (memberId: string) => {
+    setMembers(members.filter(m => m.id !== memberId));
+  };
+
   return (
     <div className="bg-white flex flex-col h-screen font-sans border-x border-indigo-50 max-w-7xl mx-auto shadow-2xl relative">
       {/* Premium Chat Header */}
@@ -74,7 +92,7 @@ export default function GroupChat() {
               <h1 className="font-black text-gray-800 text-lg tracking-tight">{groupName}</h1>
               <div className="flex items-center gap-2">
                 <span className="flex h-2 w-2 rounded-full bg-green-500 animate-pulse"></span>
-                <p className="text-[10px] text-gray-400 font-black uppercase tracking-widest leading-none">36 Thành viên trực tuyến</p>
+                <p className="text-[10px] text-gray-400 font-black uppercase tracking-widest leading-none">{members.length + 33} Thành viên trực tuyến</p>
               </div>
             </div>
           </div>
@@ -101,6 +119,13 @@ export default function GroupChat() {
                   className="w-full text-left px-4 py-2 text-sm font-medium text-gray-700 hover:bg-indigo-50 flex items-center gap-2 transition-colors"
                 >
                   <Edit2 size={16} /> Đổi tên nhóm
+                </button>
+                <div className="h-px bg-gray-100 my-1 mx-2"></div>
+                <button 
+                  onClick={() => { setIsManageMembersModalOpen(true); setIsMenuOpen(false); }}
+                  className="w-full text-left px-4 py-2 text-sm font-medium text-gray-700 hover:bg-indigo-50 flex items-center gap-2 transition-colors"
+                >
+                  <Users size={16} /> Quản lý thành viên
                 </button>
                 <div className="h-px bg-gray-100 my-1 mx-2"></div>
                 <button 
@@ -233,6 +258,75 @@ export default function GroupChat() {
                 Lưu thay đổi
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Manage Members Modal */}
+      {isManageMembersModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-gray-900/60 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="bg-white rounded-[2rem] w-full max-w-md p-6 shadow-2xl relative flex flex-col max-h-[80vh] animate-in zoom-in-95 duration-200">
+            <button 
+              onClick={() => setIsManageMembersModalOpen(false)}
+              className="absolute top-4 right-4 p-2 text-gray-400 hover:text-gray-600 bg-gray-50 hover:bg-gray-100 rounded-full transition-all z-10"
+            >
+              <X size={20} />
+            </button>
+            <div className="text-center mb-6 pt-2">
+              <div className="w-16 h-16 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center font-black text-xl mx-auto mb-3">
+                {groupName.substring(groupName.length > 2 ? groupName.length - 2 : 0).toUpperCase()}
+              </div>
+              <h2 className="text-xl font-black text-gray-800">{groupName}</h2>
+              <p className="text-xs font-bold text-indigo-500 mt-1">{members.length} THÀNH VIÊN</p>
+            </div>
+
+            <div className="flex items-center gap-2 mb-4 bg-gray-50 p-2 rounded-xl">
+              <input 
+                type="text" 
+                value={newMemberName}
+                onChange={(e) => setNewMemberName(e.target.value)}
+                onKeyPress={(e) => e.key === 'Enter' && handleAddMember()}
+                placeholder="Thêm thành viên mới..."
+                className="flex-1 bg-transparent border-none outline-none px-2 font-medium text-sm text-gray-700"
+              />
+              <button 
+                onClick={handleAddMember}
+                className="p-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-all"
+              >
+                <PlusCircle size={20} />
+              </button>
+            </div>
+
+            <div className="flex-1 overflow-y-auto pr-2 space-y-2">
+              {members.map(member => (
+                <div key={member.id} className="flex items-center justify-between p-3 bg-white border border-gray-100 rounded-xl shadow-sm hover:border-indigo-100 transition-all">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 bg-gradient-to-br from-indigo-50 to-pink-50 rounded-full flex items-center justify-center font-black text-sm text-indigo-600">
+                      {member.name.substring(0, 1).toUpperCase()}
+                    </div>
+                    <span className="font-bold text-gray-700 text-sm">{member.name}</span>
+                  </div>
+                  <button 
+                    onClick={() => handleRemoveMember(member.id)}
+                    className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all"
+                  >
+                    <Trash2 size={18} />
+                  </button>
+                </div>
+              ))}
+              {members.length === 0 && (
+                <div className="py-8 text-center text-gray-400 font-medium text-sm">
+                  Chưa có thành viên nào
+                </div>
+              )}
+            </div>
+            
+            <button 
+              onClick={() => setIsManageMembersModalOpen(false)}
+              className="mt-6 w-full py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-black rounded-xl transition-all"
+            >
+              Xong
+            </button>
           </div>
         </div>
       )}
