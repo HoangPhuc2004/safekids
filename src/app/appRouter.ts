@@ -16,6 +16,7 @@ import TeacherLecturesView from "./views/teacher/TeacherLecturesView";
 import ProfileView from "./views/shared/ProfileView";
 import StoryGameView from "./views/student/StoryGameView";
 import GameLobbyView from "./views/student/GameLobbyView";
+import StudentGameResult from "./views/student/StudentGameResult";
 import LearningPathView from "./views/student/LearningPathView";
 import ErrorBoundary from "./components/ErrorBoundary";
 
@@ -60,6 +61,7 @@ export const router = createBrowserRouter([
       { path: "profile", Component: ProfileView },
       { path: "story-game", Component: StoryGameView },
       { path: "game-lobby", Component: GameLobbyView },
+      { path: "game-result/:id", Component: StudentGameResult },
       { path: "learning-path", Component: LearningPathView },
     ],
   },
