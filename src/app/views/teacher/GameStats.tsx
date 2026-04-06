@@ -1,208 +1,256 @@
+import { useState } from "react";
 import { useNavigate, useParams } from "react-router";
-import { ArrowLeft, Users, CheckCircle, XCircle, BarChart3, TrendingUp, Calendar, Trophy, Target, AlertCircle } from "lucide-react";
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  PieChart,
-  Pie,
-  Cell,
-  Legend
-} from "recharts";
+import { Info, Volume2, Maximize, Palette, Mail, Check, X, HelpCircle, SquareCheck } from "lucide-react";
 
 export default function GameStats() {
   const navigate = useNavigate();
   const { id } = useParams();
+  const [activeTab, setActiveTab] = useState<'overview' | 'questions'>('overview');
 
-  const mockData = {
-    title: "Game Lớp 5A - Phòng tránh cơ bản",
-    date: "10/10/2026",
-    totalStudents: 35,
-    avgScore: 85,
-    participants: 35,
-    questions: [
-      { id: 1, text: "Vùng nhạy cảm là gì?", correct: 30, incorrect: 5 },
-      { id: 2, text: "Ai được phép chạm vào vùng đồ bơi?", correct: 34, incorrect: 1 },
-      { id: 3, text: "Quy tắc 5 ngón tay", correct: 25, incorrect: 10 },
-      { id: 4, text: "Khi bị đe dọa, em nên làm gì?", correct: 28, incorrect: 7 },
-    ]
-  };
-
-  const pieData = [
-    { name: "Đạt (>=50%)", value: 30, color: "#4f46e5" },
-    { name: "Chưa đạt (<50%)", value: 5, color: "#f43f5e" }
+  const accuracy = 48; // Mock accuracy
+  
+  // Mock Data
+  const students = [
+    { id: 1, name: "Phuc Pham Hoang", score: 2300, points: 4, totalPoints: 8, answers: ['correct', 'correct', 'partial', 'correct', 'incorrect', 'incorrect', 'correct', 'incorrect'] }
   ];
 
-  const barData = mockData.questions.map(q => ({
-    name: `Câu ${q.id}`,
-    "Đúng": q.correct,
-    "Sai": q.incorrect,
-  }));
+  const questions = [
+    { id: 1, type: "Nhiều lựa chọn", text: "1. Vùng nhạy cảm là gì?", time: 3, correct: 1, incorrect: 0, options: ["Đáp án A", "Đáp án B", "Đáp án C"] },
+    { id: 2, type: "Một lựa chọn", text: "2. Ai được phép chạm vào vùng đồ bơi?", time: 2, correct: 1, incorrect: 0, options: ["Đáp án A", "Đáp án B", "Đáp án C"] }
+  ];
 
-  const hardestQuestion = mockData.questions.reduce((prev, current) => (prev.incorrect > current.incorrect) ? prev : current);
-  const easiestQuestion = mockData.questions.reduce((prev, current) => (prev.correct > current.correct) ? prev : current);
+  const renderIcon = (status: string) => {
+    switch(status) {
+      case 'correct': return <div className="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center text-white"><Check size={16} strokeWidth={4} /></div>;
+      case 'incorrect': return <div className="w-8 h-8 rounded-full bg-[#E12A75] flex items-center justify-center text-white"><X size={16} strokeWidth={4} /></div>;
+      case 'partial': return <div className="w-8 h-8 rounded-full bg-yellow-500 flex items-center justify-center text-white"><Check size={16} strokeWidth={4} /></div>;
+      default: return <div className="w-8 h-8 rounded-full bg-gray-500"></div>;
+    }
+  };
 
   return (
-    <div className="bg-transparent min-h-screen pb-24 flex flex-col font-sans">
-      {/* Premium Header */}
-      <div className="bg-white/80 backdrop-blur-md px-6 py-4 sticky top-0 z-30 border-b border-indigo-50 flex items-center gap-4 shadow-sm">
-        <button onClick={() => navigate(-1)} className="p-2.5 text-gray-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-xl transition-all shadow-sm">
-          <ArrowLeft size={22} />
-        </button>
-        <div>
-          <h1 className="font-black text-gray-800 text-lg lg:text-xl tracking-tight">
-            Thống kê chi tiết
-          </h1>
-          <p className="hidden md:block text-[10px] font-black text-gray-400 uppercase tracking-widest mt-0.5">Mã Game: {id || 'GAME-101'}</p>
+    <div className="min-h-screen bg-[#11050e] font-sans relative overflow-hidden flex flex-col items-center">
+      {/* Background gradients */}
+      <div className="absolute inset-0 z-0 pointer-events-none opacity-60">
+        <div className="absolute top-0 left-0 w-1/3 h-full bg-gradient-to-r from-yellow-500/10 to-transparent blur-3xl"></div>
+        <div className="absolute top-0 right-0 w-1/3 h-full bg-gradient-to-l from-teal-500/10 to-transparent blur-3xl"></div>
+        <div className="absolute bottom-0 w-full h-1/2 bg-gradient-to-t from-pink-600/10 to-transparent blur-2xl"></div>
+      </div>
+
+      {/* Top Navigation Bar */}
+      <div className="relative z-10 w-full flex items-center justify-between px-6 py-3 bg-[#111111]/80 backdrop-blur-sm border-b border-white/10">
+        <div className="flex flex-col opacity-0">Logo block</div>
+        <div className="flex items-center gap-3">
+          <button className="flex items-center gap-2 bg-[#2a2a2a] hover:bg-[#3a3a3a] text-white px-4 py-2 rounded-lg font-bold text-sm transition-colors border border-white/5">
+            <Palette size={16} /> Giao diện
+          </button>
+          <button className="bg-[#2a2a2a] hover:bg-[#3a3a3a] text-white p-2 rounded-lg transition-colors border border-white/5">
+            <Volume2 size={18} />
+          </button>
+          <button className="bg-[#2a2a2a] hover:bg-[#3a3a3a] text-white p-2 rounded-lg transition-colors border border-white/5">
+            <Maximize size={18} />
+          </button>
+          <button 
+            onClick={() => navigate("/teacher")}
+            className="bg-[#ED2E7E] hover:bg-[#c92469] text-white px-6 py-2 rounded-lg font-bold text-sm transition-all shadow-lg ml-2"
+          >
+            Thoát
+          </button>
         </div>
       </div>
 
-      <div className="flex-1 max-w-7xl mx-auto w-full p-6 lg:p-10 space-y-10">
-        {/* Game Info Card */}
-        <div className="bg-white p-8 lg:p-10 rounded-[2.5rem] shadow-xl shadow-indigo-100/50 border border-white flex flex-col lg:flex-row justify-between items-start lg:items-center gap-8 relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-50 rounded-full -mr-20 -mt-20 opacity-50 blur-3xl"></div>
-          
-          <div className="relative z-10 max-w-2xl">
-            <div className="flex items-center gap-3 text-[10px] font-black text-indigo-500 uppercase tracking-widest mb-3">
-              <Calendar size={14} /> {mockData.date}
-            </div>
-            <h2 className="text-3xl lg:text-4xl font-black text-gray-900 mb-2 tracking-tight">{mockData.title}</h2>
-            <p className="text-gray-500 font-bold text-lg">Phân tích kết quả học tập của Lớp 5A</p>
+      {/* Main Content */}
+      <div className="flex-1 relative z-10 w-full max-w-6xl px-6 py-10 flex flex-col">
+        
+        {/* Top Summary Box */}
+        <div className="bg-[#1a191f] rounded-3xl p-8 shadow-2xl border border-white/5 w-full mx-auto mb-8 flex flex-col items-center relative">
+          <div className="flex items-center gap-2 text-gray-300 text-sm font-semibold mb-4">
+            Độ chính xác của lớp <Info size={14} className="text-gray-400" />
           </div>
           
-          <div className="flex gap-4 w-full lg:w-auto relative z-10">
-            <div className="flex-1 lg:flex-none bg-indigo-600 p-6 rounded-3xl text-white shadow-xl shadow-indigo-200 flex flex-col items-center justify-center min-w-[140px]">
-              <Trophy size={32} className="mb-2 opacity-80" />
-              <p className="text-[10px] font-black text-indigo-100 uppercase tracking-widest mb-1">Điểm TB</p>
-              <p className="text-3xl font-black">{mockData.avgScore}%</p>
+          <div className="relative w-full max-w-2xl h-12 bg-black rounded-xl border border-gray-800 mb-8 flex overflow-hidden p-1 shadow-inner">
+            <div className="h-full bg-teal-400 rounded-l-md" style={{ width: `${accuracy}%` }}></div>
+            <div className="h-full bg-[#E12A75] rounded-r-md" style={{ width: `${100 - accuracy}%` }}></div>
+            
+            {/* Range markers */}
+            <div className="absolute top-[110%] w-full flex justify-between text-[10px] text-gray-500 px-1 font-bold">
+               <span>0%</span><span>10%</span><span>20%</span><span>30%</span><span>40%</span><span>50%</span><span>60%</span><span>70%</span><span>80%</span><span>90%</span><span>100%</span>
             </div>
-            <div className="flex-1 lg:flex-none bg-white p-6 rounded-3xl border border-indigo-50 shadow-sm flex flex-col items-center justify-center min-w-[140px]">
-              <Users size={32} className="mb-2 text-indigo-400" />
-              <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Tham gia</p>
-              <p className="text-3xl font-black text-gray-800">{mockData.totalStudents}</p>
+            
+            {/* Percent Badge Bubble */}
+            <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-white rounded-full w-14 h-14 border-4 border-[#1a191f] flex flex-col items-center justify-center shadow-lg">
+               <span className="text-black font-black text-lg leading-none">{accuracy}%</span>
             </div>
+          </div>
+
+          <h2 className="text-2xl font-black text-white mb-2 mt-4">Khởi động tuyệt vời! Luyện tập tạo nên sự hoàn hảo!</h2>
+          <p className="text-gray-400 mb-8">Giao bài tập để học sinh có thể thành thạo chủ đề này.</p>
+
+          <div className="flex items-center gap-4">
+            <button className="bg-[#3a3a40] hover:bg-[#4a4a50] text-white px-8 py-3 rounded-lg font-bold transition-colors">Chơi lại</button>
+            <button className="bg-white hover:bg-gray-200 text-black px-8 py-3 rounded-lg font-black transition-colors">Giao bài tập</button>
+            <button className="bg-[#3a3a40] hover:bg-[#4a4a50] text-white px-8 py-3 rounded-lg font-bold transition-colors">Xem lại câu hỏi</button>
           </div>
         </div>
 
-        {/* Analytics Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Question Insights */}
-          <div className="lg:col-span-2 space-y-8">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="bg-white p-8 rounded-[2rem] shadow-sm border border-rose-100 relative overflow-hidden group">
-                <div className="absolute top-0 right-0 p-6 opacity-10 group-hover:rotate-12 transition-transform">
-                  <AlertCircle size={60} className="text-rose-600" />
-                </div>
-                <h4 className="text-[10px] font-black text-rose-500 uppercase tracking-widest mb-4">Câu hỏi khó nhất</h4>
-                <p className="font-black text-gray-800 text-lg mb-4 leading-tight">Câu {hardestQuestion.id}: {hardestQuestion.text}</p>
-                <div className="flex items-end gap-2">
-                   <span className="text-3xl font-black text-rose-600">{hardestQuestion.incorrect}</span>
-                   <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest pb-1.5">Học sinh trả lời sai</span>
-                </div>
-              </div>
-
-              <div className="bg-white p-8 rounded-[2rem] shadow-sm border border-green-100 relative overflow-hidden group">
-                <div className="absolute top-0 right-0 p-6 opacity-10 group-hover:rotate-12 transition-transform">
-                  <CheckCircle size={60} className="text-green-600" />
-                </div>
-                <h4 className="text-[10px] font-black text-green-500 uppercase tracking-widest mb-4">Câu hỏi dễ nhất</h4>
-                <p className="font-black text-gray-800 text-lg mb-4 leading-tight">Câu {easiestQuestion.id}: {easiestQuestion.text}</p>
-                <div className="flex items-end gap-2">
-                   <span className="text-3xl font-black text-green-600">{easiestQuestion.correct}</span>
-                   <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest pb-1.5">Học sinh trả lời đúng</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Answer Distribution Chart */}
-            <div className="bg-white p-8 rounded-[2.5rem] shadow-sm border border-indigo-50">
-              <div className="flex items-center justify-between mb-10">
-                <h3 className="font-black text-xl text-gray-800 flex items-center gap-3">
-                  <BarChart3 className="text-indigo-600" />
-                  Phân phối đáp án theo câu hỏi
-                </h3>
-              </div>
-              <div className="h-80 w-full">
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={barData} margin={{ top: 0, right: 0, left: -20, bottom: 0 }}>
-                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f3f4f6" />
-                    <XAxis 
-                      dataKey="name" 
-                      axisLine={false} 
-                      tickLine={false} 
-                      tick={{ fontSize: 12, fontWeight: 700, fill: '#9ca3af' }} 
-                    />
-                    <YAxis 
-                      axisLine={false} 
-                      tickLine={false} 
-                      tick={{ fontSize: 12, fontWeight: 700, fill: '#9ca3af' }} 
-                    />
-                    <Tooltip 
-                      cursor={{ fill: '#f9fafb' }} 
-                      contentStyle={{ borderRadius: '1rem', border: 'none', boxShadow: '0 20px 25px -5px rgb(0 0 0 / 0.1)', fontWeight: 700 }} 
-                    />
-                    <Bar dataKey="Đúng" stackId="a" fill="#4f46e5" radius={[0, 0, 8, 8]} barSize={40} />
-                    <Bar dataKey="Sai" stackId="a" fill="#f43f5e" radius={[8, 8, 0, 0]} barSize={40} />
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
-            </div>
+        {/* Floating Tabs */}
+        <div className="flex justify-center -mb-px z-20">
+          <div className="flex bg-[#111111]/80 rounded-t-2xl px-2">
+             <button 
+               onClick={() => setActiveTab('overview')}
+               className={`px-8 py-4 font-bold text-[15px] border-b-[3px] transition-colors ${activeTab === 'overview' ? 'text-white border-white' : 'text-gray-500 border-transparent hover:text-gray-300'}`}
+             >Tổng quan</button>
+             <button 
+               onClick={() => setActiveTab('questions')}
+               className={`px-8 py-4 font-bold text-[15px] border-b-[3px] transition-colors ${activeTab === 'questions' ? 'text-white border-white' : 'text-gray-500 border-transparent hover:text-gray-300'}`}
+             >Câu hỏi</button>
           </div>
+        </div>
 
-          {/* Pie Chart & Recommendations */}
-          <div className="space-y-8">
-            <div className="bg-white p-8 rounded-[2.5rem] shadow-sm border border-indigo-50 flex flex-col items-center">
-              <h3 className="font-black text-xl text-gray-800 mb-8 self-start">Tỷ lệ đạt mục tiêu</h3>
-              <div className="h-64 w-full">
-                <ResponsiveContainer width="100%" height="100%">
-                  <PieChart>
-                    <Pie
-                      data={pieData}
-                      cx="50%"
-                      cy="50%"
-                      innerRadius={60}
-                      outerRadius={90}
-                      paddingAngle={8}
-                      dataKey="value"
-                    >
-                      {pieData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={entry.color} stroke="none" />
-                      ))}
-                    </Pie>
-                    <Tooltip contentStyle={{ borderRadius: '1rem', border: 'none', shadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }} />
-                  </PieChart>
-                </ResponsiveContainer>
+        {/* Tab Content Box */}
+        <div className="bg-[#16151a] rounded-3xl p-6 shadow-2xl border border-white/5 w-full mx-auto min-h-[400px]">
+          
+          {activeTab === 'overview' && (
+            <div className="animate-in fade-in duration-300">
+              <div className="flex items-center justify-between mb-6 pb-6 border-b border-white/5 flex-wrap gap-4">
+                <div className="flex flex-wrap gap-4 text-xs font-bold text-gray-400">
+                   <div className="flex items-center gap-2"><div className="w-3 h-3 bg-teal-400 rounded-sm"></div> Đúng</div>
+                   <div className="flex items-center gap-2"><div className="w-3 h-3 bg-[#E12A75] rounded-sm"></div> Sai</div>
+                   <div className="flex items-center gap-2"><div className="w-3 h-3 bg-yellow-500 rounded-sm"></div> Đúng một phần</div>
+                   <div className="flex items-center gap-2"><div className="w-3 h-3 bg-blue-600 rounded-sm"></div> Chưa chấm</div>
+                   <div className="flex items-center gap-2"><div className="w-3 h-3 bg-gray-500 rounded-sm"></div> Hết giờ</div>
+                </div>
+                <div className="flex items-center gap-6">
+                   <label className="flex items-center gap-2 text-white font-bold text-sm cursor-pointer">
+                     Hiện thời gian làm bài <input type="checkbox" className="w-4 h-4 rounded border-gray-600 bg-transparent" />
+                   </label>
+                   <button className="flex items-center gap-2 bg-[#3f3e46] hover:bg-white/20 text-white px-4 py-2 rounded-lg font-bold text-sm transition-all">
+                     <Mail size={16} /> Gửi email cho tất cả phụ huynh
+                   </button>
+                </div>
               </div>
-              <div className="flex flex-col gap-3 w-full mt-4">
-                {pieData.map((entry, index) => (
-                  <div key={index} className="flex items-center justify-between p-3 rounded-2xl bg-gray-50 border border-gray-100">
-                    <div className="flex items-center gap-3">
-                      <div className="w-3 h-3 rounded-full" style={{ backgroundColor: entry.color }}></div>
-                      <span className="text-xs font-black text-gray-600 uppercase tracking-widest">{entry.name}</span>
+
+              {/* Table */}
+              <div className="w-full overflow-x-auto">
+                <table className="w-full text-left border-collapse min-w-[800px]">
+                  <thead>
+                    <tr className="border-b border-white/5">
+                      <th className="py-4 px-4 font-bold text-white w-20"></th>
+                      <th className="py-4 px-4 font-bold text-white w-64">Họ tên</th>
+                      <th className="py-4 px-4 font-bold text-white w-32">Điểm</th>
+                      <th className="py-4 px-4 font-bold text-white w-48">Chính xác <Info size={14} className="inline ml-1 text-gray-500" /></th>
+                      <th className="py-4 px-2 font-bold text-white text-center"><div className="text-[10px] text-gray-400 mb-1">Q1</div><div className="text-xs">100%</div></th>
+                      <th className="py-4 px-2 font-bold text-white text-center"><div className="text-[10px] text-gray-400 mb-1">Q2</div><div className="text-xs">100%</div></th>
+                      <th className="py-4 px-2 font-bold text-white text-center"><div className="text-[10px] text-gray-400 mb-1">Q3</div><div className="text-xs">100%</div></th>
+                      <th className="py-4 px-2 font-bold text-white text-center"><div className="text-[10px] text-gray-400 mb-1">Q4</div><div className="text-xs">100%</div></th>
+                      <th className="py-4 px-2 font-bold text-white text-center"><div className="text-[10px] text-gray-400 mb-1">Q5</div><div className="text-xs">0%</div></th>
+                      <th className="py-4 px-2 font-bold text-white text-center"><div className="text-[10px] text-gray-400 mb-1">Q6</div><div className="text-xs">0%</div></th>
+                      <th className="py-4 px-2 font-bold text-white text-center"><div className="text-[10px] text-gray-400 mb-1">Q7</div><div className="text-xs">100%</div></th>
+                      <th className="py-4 px-2 font-bold text-white text-center"><div className="text-[10px] text-gray-400 mb-1">Q8</div><div className="text-xs">0%</div></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {students.map((student, i) => (
+                      <tr key={student.id} className="hover:bg-[#222129] transition-colors border-b border-white/5 last:border-0">
+                        <td className="py-4 px-4 text-gray-400 font-bold">{i + 1}</td>
+                        <td className="py-4 px-4 flex items-center gap-3">
+                           <div className="w-6 h-6 rounded bg-orange-200"></div>
+                           <span className="text-white font-bold">{student.name}</span>
+                           <button className="text-gray-500 hover:text-white bg-[#2a2a30] p-1.5 rounded"><Mail size={12} /></button>
+                        </td>
+                        <td className="py-4 px-4 text-white font-semibold">{student.score}</td>
+                        <td className="py-4 px-4">
+                           <span className="text-white font-semibold">{Math.round((student.points/student.totalPoints)*100)}%</span>
+                           <span className="text-gray-400 text-xs ml-2">({student.points} / {student.totalPoints} pts)</span>
+                        </td>
+                        {student.answers.map((status, index) => (
+                          <td key={index} className="py-4 px-2 text-center">
+                            <div className="flex justify-center -mt-2">
+                              {renderIcon(status)}
+                            </div>
+                          </td>
+                        ))}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+
+          {activeTab === 'questions' && (
+            <div className="animate-in fade-in duration-300">
+              <div className="flex items-center justify-between mb-6 pb-6 border-b border-white/5">
+                <div className="text-gray-400 font-bold flex items-center gap-2">
+                  <SquareCheck size={18} /> {questions.length} Câu hỏi
+                </div>
+                <label className="flex items-center gap-2 text-gray-400 font-bold text-sm cursor-pointer">
+                  Sắp xếp theo độ chính xác <input type="checkbox" className="w-4 h-4 rounded border-gray-600 bg-transparent" />
+                </label>
+              </div>
+
+              {/* Bubbles */}
+              <div className="flex flex-wrap gap-2 justify-center mb-8">
+                 <div className="w-8 h-8 rounded bg-[#3c6b54] text-white flex items-center justify-center font-black text-sm">1</div>
+                 <div className="w-8 h-8 rounded bg-[#3c6b54] text-white flex items-center justify-center font-black text-sm">2</div>
+                 <div className="w-8 h-8 rounded bg-[#3c6b54] text-white flex items-center justify-center font-black text-sm">3</div>
+                 <div className="w-8 h-8 rounded bg-[#3c6b54] text-white flex items-center justify-center font-black text-sm">4</div>
+                 <div className="w-8 h-8 rounded bg-[#7a2846] text-white flex items-center justify-center font-black text-sm">5</div>
+                 <div className="w-8 h-8 rounded bg-[#7a2846] text-white flex items-center justify-center font-black text-sm">6</div>
+                 <div className="w-8 h-8 rounded bg-[#3c6b54] text-white flex items-center justify-center font-black text-sm">7</div>
+                 <div className="w-8 h-8 rounded bg-[#7a2846] text-white flex items-center justify-center font-black text-sm">8</div>
+              </div>
+
+              {/* Question list */}
+              <div className="space-y-6 max-w-4xl mx-auto">
+                {questions.map((q) => (
+                  <div key={q.id} className="relative bg-[#1c1b22] border border-[#33313a] rounded-xl overflow-hidden pl-2">
+                    {/* Left Border */}
+                    <div className="absolute top-0 left-0 w-1.5 h-full bg-teal-400"></div>
+                    
+                    <div className="p-5 flex flex-col gap-6">
+                      {/* Card Header */}
+                      <div className="flex items-center justify-between pb-4 border-b border-[#33313a]">
+                        <div className="bg-[#2a2930] flex items-center gap-2 px-3 py-1.5 rounded-lg border border-[#3f3e46]">
+                           <SquareCheck size={14} className="text-gray-400" />
+                           <span className="text-gray-300 text-xs font-bold">{q.type}</span>
+                        </div>
+                        <div className="flex gap-4">
+                           <div className="flex flex-col border border-[#3f3e46] rounded-lg overflow-hidden">
+                             <div className="bg-[#2a2930] text-[10px] text-gray-400 font-bold px-3 pt-1">Thời gian TB</div>
+                             <div className="bg-[#2a2930] text-sm text-gray-200 font-black px-3 pb-1">{q.time} s</div>
+                           </div>
+                           <div className="flex border border-[#3f3e46] rounded-lg overflow-hidden bg-[#2a2930]">
+                             <div className="flex flex-col px-3 justify-center gap-1">
+                               <div className="w-32 h-1.5 bg-black rounded-full overflow-hidden flex">
+                                 <div className="h-full bg-teal-400" style={{width: `${(q.correct / (q.correct + q.incorrect)) * 100}%`}}></div>
+                               </div>
+                               <div className="text-[10px] text-gray-300 font-bold">{q.correct} đúng, {q.incorrect} sai</div>
+                             </div>
+                           </div>
+                        </div>
+                      </div>
+
+                      {/* Question Content */}
+                      <div className="text-white font-bold text-lg">
+                        {q.text}
+                      </div>
+
+                      {/* Options */}
+                      <div className="space-y-3 pl-2">
+                        {q.options.map((opt, i) => (
+                          <div key={i} className="flex items-center gap-3">
+                            <div className={`w-5 h-5 rounded-full flex-shrink-0 border-2 ${i === 0 ? 'border-teal-400 bg-teal-400/20' : 'border-gray-600 bg-[#2a2930]'}`}></div>
+                            <span className={i === 0 ? 'text-white' : 'text-gray-400'}>{opt}</span>
+                          </div>
+                        ))}
+                      </div>
                     </div>
-                    <span className="font-black text-gray-800">{entry.value} EM</span>
                   </div>
                 ))}
               </div>
             </div>
-
-            <div className="bg-indigo-600 p-8 rounded-[2.5rem] text-white shadow-xl shadow-indigo-200">
-              <h3 className="text-xl font-black mb-4 flex items-center gap-2">
-                <Target size={24} />
-                Đề xuất giảng dạy
-              </h3>
-              <p className="text-indigo-100 font-medium text-sm leading-relaxed mb-6">
-                Dựa trên kết quả, có <span className="text-white font-black">{hardestQuestion.incorrect} học sinh</span> còn lúng túng ở <span className="text-white font-black">Câu {hardestQuestion.id}</span>. Cô nên dành 5-10 phút đầu giờ tới để ôn tập lại nội dung này.
-              </p>
-              <button className="w-full bg-white/10 hover:bg-white/20 border border-white/20 py-3 rounded-xl font-black text-xs uppercase tracking-widest transition-all">
-                Tải báo cáo PDF chi tiết
-              </button>
-            </div>
-          </div>
+          )}
         </div>
       </div>
     </div>
