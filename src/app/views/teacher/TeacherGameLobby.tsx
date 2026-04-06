@@ -54,19 +54,11 @@ export default function TeacherGameLobby() {
 
       {/* Top Navigation Bar */}
       <div className="relative z-10 flex items-center justify-between px-6 py-3 bg-[#111111]/80 backdrop-blur-sm border-b border-white/10">
-        <div className="flex flex-col">
-          <span className="text-white font-black text-xl italic tracking-tighter flex items-center gap-1">
-            <div className="w-1.5 h-5 bg-white skew-x-[-15deg] mr-1"></div>
-            WAYGROUND
-          </span>
-          <span className="text-gray-400 text-[10px] font-bold tracking-widest pl-3 -mt-1">
-            formerly Quizizz
-          </span>
-        </div>
+        <div></div>
         
         <div className="flex items-center gap-3">
           <button className="flex items-center gap-2 bg-[#2a2a2a] hover:bg-[#3a3a3a] text-white px-4 py-2 rounded-lg font-bold text-sm transition-colors border border-white/5">
-            <Palette size={16} /> Themes
+            <Palette size={16} /> Giao diện
           </button>
           <button className="bg-[#2a2a2a] hover:bg-[#3a3a3a] text-white p-2 rounded-lg transition-colors border border-white/5">
             <Volume2 size={18} />
@@ -80,7 +72,7 @@ export default function TeacherGameLobby() {
             }}
             className="bg-[#ED2E7E] hover:bg-[#c92469] text-white px-6 py-2 rounded-lg font-bold text-sm transition-all shadow-lg"
           >
-            End
+            Kết thúc
           </button>
         </div>
       </div>
@@ -99,9 +91,9 @@ export default function TeacherGameLobby() {
                   1
                 </div>
                 <div className="flex-1 flex flex-col sm:flex-row sm:items-center justify-between pr-4 gap-2">
-                  <span className="text-gray-400 font-semibold text-sm">Join using<br/>any device</span>
+                  <span className="text-gray-400 font-semibold text-sm">Tham gia bằng<br/>thiết bị bất kỳ</span>
                   <span className="text-white font-black text-2xl tracking-tight sm:text-3xl">
-                    wayground.com/join
+                    {window.location.host}/student/join
                   </span>
                 </div>
                 <button 
@@ -118,7 +110,7 @@ export default function TeacherGameLobby() {
                   2
                 </div>
                 <div className="flex-1 flex flex-col sm:flex-row sm:items-center justify-between pr-4 gap-2">
-                  <span className="text-gray-400 font-semibold text-sm">Enter the<br/>join code</span>
+                  <span className="text-gray-400 font-semibold text-sm">Nhập mã<br/>tham gia</span>
                   <span className="text-white font-black text-5xl tracking-[0.15em] ml-4 font-mono">
                     {formattedCode}
                   </span>
@@ -137,7 +129,7 @@ export default function TeacherGameLobby() {
               <div className="bg-white p-2 rounded-xl">
                 <QrCode size={80} className="text-black" />
               </div>
-              <div className="text-gray-400 font-bold text-sm mt-1">Share Via</div>
+              <div className="text-gray-400 font-bold text-sm mt-1">Chia sẻ qua</div>
               <div className="flex items-center gap-2 mt-1">
                 <button className="bg-[#3f3e46] p-1.5 rounded-md text-white hover:bg-white/20"><Link size={14} /></button>
                 {/* Fake Google Classroom icon */}
@@ -150,7 +142,7 @@ export default function TeacherGameLobby() {
           {/* Bottom Actions Row */}
           <div className="flex flex-col sm:flex-row gap-4 items-stretch justify-between">
             <button className="bg-[#2a2930] hover:bg-[#3a3a40] border border-white/5 text-gray-300 rounded-xl px-4 py-3 flex items-center gap-3 font-semibold transition-colors grow max-w-sm justify-between">
-              <span className="flex items-center gap-2 text-sm"><Volume2 size={16} className="text-gray-400" /> Auto start your quiz</span>
+              <span className="flex items-center gap-2 text-sm"><Volume2 size={16} className="text-gray-400" /> Tự động bắt đầu quiz</span>
               <div className="bg-[#3f3e46] p-1 rounded"><Play size={14} className="fill-current text-gray-400" /></div>
             </button>
             
@@ -164,7 +156,7 @@ export default function TeacherGameLobby() {
                   : 'bg-[#ED2E7E] hover:bg-[#fa3b8c] hover:scale-[1.02] active:scale-95'}
               `}
             >
-              START
+              BẮT ĐẦU
             </button>
             
             <button className="bg-[#2a2930] border border-white/5 text-white rounded-xl px-6 py-3 flex items-center justify-center gap-3 font-black text-xl shrink-0 min-w[100px]">
