@@ -1,12 +1,13 @@
 import { useNavigate } from "react-router";
-import { Users, Play, ArrowLeft, Loader2, Sparkles, Copy, Check } from "lucide-react";
+import { Users, Play, ArrowLeft, Loader2, Copy, Check, Link, ChevronDown, Volume2, Maximize, Palette, X, QrCode } from "lucide-react";
 import { useGameRoom } from "../../context/GameRoomContext";
 import { useState } from "react";
 
 export default function TeacherGameLobby() {
   const navigate = useNavigate();
   const { activeRoom, startGame, leaveRoom } = useGameRoom();
-  const [copied, setCopied] = useState(false);
+  const [copiedLink, setCopiedLink] = useState(false);
+  const [copiedCode, setCopiedCode] = useState(false);
 
   if (!activeRoom) {
     return (
@@ -14,7 +15,7 @@ export default function TeacherGameLobby() {
         <h2 className="text-2xl font-black text-gray-800 mb-4">Chưa có phòng game nào</h2>
         <button 
           onClick={() => navigate("/teacher/create-game")}
-          className="bg-indigo-600 text-white px-6 py-3 rounded-xl font-black shadow-lg"
+          className="bg-pink-600 text-white px-6 py-3 rounded-xl font-black shadow-lg"
         >
           Tạo game ngay
         </button>
@@ -22,104 +23,176 @@ export default function TeacherGameLobby() {
     );
   }
 
-  const handleCopy = () => {
+  const joinLink = window.location.origin + "/student/join";
+  const formattedCode = activeRoom.id.split('').join(' ');
+
+  const handleCopyLink = () => {
+    navigator.clipboard.writeText(joinLink);
+    setCopiedLink(true);
+    setTimeout(() => setCopiedLink(false), 2000);
+  };
+
+  const handleCopyCode = () => {
     navigator.clipboard.writeText(activeRoom.id);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    setCopiedCode(true);
+    setTimeout(() => setCopiedCode(false), 2000);
   };
 
   const handleStartGame = () => {
     startGame(activeRoom.id);
-    navigate(`/teacher/game-stats/${activeRoom.id}`); // Giả lập bắt đầu game -> sang thống kê
+    navigate(`/teacher/game-stats/${activeRoom.id}`);
   };
 
   return (
-    <div className="p-6 lg:p-10 bg-transparent min-h-full pb-24 font-sans">
-      <div className="mb-8 flex items-center justify-between">
-        <button 
-          onClick={() => navigate("/teacher")}
-          className="flex items-center gap-2 text-gray-500 hover:text-indigo-600 font-bold transition-colors bg-white px-4 py-2 rounded-xl shadow-sm"
-        >
-          <ArrowLeft size={18} /> Rời phòng
-        </button>
+    <div className="min-h-screen bg-[#11050e] font-sans relative overflow-hidden flex flex-col">
+      {/* Fake 3D Neon Background effect */}
+      <div className="absolute inset-0 z-0 pointer-events-none opacity-60">
+        <div className="absolute top-0 left-0 w-1/3 h-full bg-gradient-to-r from-yellow-500/20 to-transparent blur-3xl"></div>
+        <div className="absolute top-0 right-0 w-1/3 h-full bg-gradient-to-l from-teal-500/20 to-transparent blur-3xl"></div>
+        <div className="absolute bottom-0 w-full h-1/2 bg-gradient-to-t from-pink-600/20 to-transparent blur-2xl"></div>
       </div>
 
-      <div className="bg-white rounded-[2.5rem] p-8 lg:p-12 shadow-xl shadow-indigo-100/50 border border-indigo-50 relative overflow-hidden">
-        {/* Background decorations */}
-        <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-50 rounded-bl-full -mr-10 -mt-10 opacity-50"></div>
-        <div className="absolute bottom-0 left-0 w-48 h-48 bg-pink-50 rounded-tr-full -ml-10 -mb-10 opacity-50"></div>
+      {/* Top Navigation Bar */}
+      <div className="relative z-10 flex items-center justify-between px-6 py-3 bg-[#111111]/80 backdrop-blur-sm border-b border-white/10">
+        <div className="flex flex-col">
+          <span className="text-white font-black text-xl italic tracking-tighter flex items-center gap-1">
+            <div className="w-1.5 h-5 bg-white skew-x-[-15deg] mr-1"></div>
+            WAYGROUND
+          </span>
+          <span className="text-gray-400 text-[10px] font-bold tracking-widest pl-3 -mt-1">
+            formerly Quizizz
+          </span>
+        </div>
+        
+        <div className="flex items-center gap-3">
+          <button className="flex items-center gap-2 bg-[#2a2a2a] hover:bg-[#3a3a3a] text-white px-4 py-2 rounded-lg font-bold text-sm transition-colors border border-white/5">
+            <Palette size={16} /> Themes
+          </button>
+          <button className="bg-[#2a2a2a] hover:bg-[#3a3a3a] text-white p-2 rounded-lg transition-colors border border-white/5">
+            <Volume2 size={18} />
+          </button>
+          <button className="bg-[#2a2a2a] hover:bg-[#3a3a3a] text-white p-2 rounded-lg transition-colors border border-white/5">
+            <Maximize size={18} />
+          </button>
+          <button 
+            onClick={() => {
+              navigate("/teacher");
+            }}
+            className="bg-[#ED2E7E] hover:bg-[#c92469] text-white px-6 py-2 rounded-lg font-bold text-sm transition-all shadow-lg"
+          >
+            End
+          </button>
+        </div>
+      </div>
 
-        <div className="relative z-10 flex flex-col md:flex-row gap-12 items-center md:items-start justify-between">
-          <div className="flex-1 text-center md:text-left space-y-6">
-            <div className="inline-flex items-center gap-2 bg-pink-100 text-pink-600 px-4 py-1.5 rounded-full font-black text-xs uppercase tracking-widest">
-              <Sparkles size={16} /> Phòng chờ
-            </div>
+      {/* Main Content */}
+      <div className="flex-1 relative z-10 flex flex-col items-center justify-center p-6 mt-[-5%]">
+        {/* The Black Box */}
+        <div className="bg-[#1f1e24] rounded-3xl p-6 shadow-2xl border border-white/5 max-w-4xl w-full">
+          <div className="flex flex-col md:flex-row gap-6 mb-6">
             
-            <h1 className="text-4xl lg:text-5xl font-black text-gray-900 tracking-tight leading-tight">
-              {activeRoom.gameName}
-            </h1>
-            
-            <div className="mt-8">
-              <p className="text-gray-500 font-bold text-sm uppercase tracking-widest mb-3">Mã phòng cho học sinh</p>
-              <div className="flex items-center justify-center md:justify-start gap-4">
-                <div className="bg-gray-100 px-8 py-4 rounded-2xl border-2 border-gray-200 text-5xl font-mono font-black text-indigo-700 tracking-[0.2em] shadow-inner">
-                  {activeRoom.id}
+            {/* Left Section: Link and Code */}
+            <div className="flex-1 space-y-4">
+              {/* Row 1: Join Link */}
+              <div className="bg-[#2a2930] rounded-2xl flex items-center p-4 border border-white/5 group hover:border-white/20 transition-all">
+                <div className="w-8 h-8 rounded-full bg-[#3f3e46] text-gray-300 font-black flex items-center justify-center text-sm mr-4 shrink-0">
+                  1
+                </div>
+                <div className="flex-1 flex flex-col sm:flex-row sm:items-center justify-between pr-4 gap-2">
+                  <span className="text-gray-400 font-semibold text-sm">Join using<br/>any device</span>
+                  <span className="text-white font-black text-2xl tracking-tight sm:text-3xl">
+                    wayground.com/join
+                  </span>
                 </div>
                 <button 
-                  onClick={handleCopy}
-                  className="bg-indigo-50 hover:bg-indigo-100 text-indigo-600 p-4 rounded-2xl transition-all h-[88px] flex flex-col items-center justify-center gap-1 min-w-[88px]"
+                  onClick={handleCopyLink}
+                  className="bg-[#3f3e46] hover:bg-white/20 text-white p-3 rounded-xl transition-all"
                 >
-                  {copied ? <Check size={28} /> : <Copy size={28} />}
-                  <span className="text-[10px] font-black uppercase tracking-widest">{copied ? 'Đã chép' : 'Sao chép'}</span>
+                  {copiedLink ? <Check size={20} className="text-green-400" /> : <Copy size={20} />}
+                </button>
+              </div>
+
+              {/* Row 2: Join Code */}
+              <div className="bg-[#2a2930] rounded-2xl flex items-center p-4 border border-white/5 group hover:border-white/20 transition-all">
+                <div className="w-8 h-8 rounded-full bg-[#3f3e46] text-gray-300 font-black flex items-center justify-center text-sm mr-4 shrink-0">
+                  2
+                </div>
+                <div className="flex-1 flex flex-col sm:flex-row sm:items-center justify-between pr-4 gap-2">
+                  <span className="text-gray-400 font-semibold text-sm">Enter the<br/>join code</span>
+                  <span className="text-white font-black text-5xl tracking-[0.15em] ml-4 font-mono">
+                    {formattedCode}
+                  </span>
+                </div>
+                <button 
+                  onClick={handleCopyCode}
+                  className="bg-[#3f3e46] hover:bg-white/20 text-white p-3 rounded-xl transition-all"
+                >
+                  {copiedCode ? <Check size={20} className="text-green-400" /> : <Copy size={20} />}
                 </button>
               </div>
             </div>
-          </div>
 
-          <div className="w-full md:w-[400px] bg-gray-50 rounded-[2rem] p-6 border-2 border-gray-100 shadow-inner flex flex-col">
-            <div className="flex flex-col sm:flex-row justify-between items-center sm:items-end gap-4 mb-6">
-              <div>
-                <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1 text-center sm:text-left">Đã tham gia</p>
-                <div className="flex items-center justify-center sm:justify-start gap-3 text-3xl font-black text-gray-800">
-                  <Users size={32} className="text-indigo-500" />
-                  {activeRoom.players.length} <span className="text-sm text-gray-500">Học sinh</span>
-                </div>
+            {/* Right Section: Share */}
+            <div className="w-full md:w-48 bg-[#2a2930] rounded-2xl border border-white/5 p-4 flex flex-col items-center justify-center gap-3">
+              <div className="bg-white p-2 rounded-xl">
+                <QrCode size={80} className="text-black" />
               </div>
-              
-              <button 
-                onClick={handleStartGame}
-                disabled={activeRoom.players.length === 0}
-                className={`
-                  flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-black text-white shadow-lg transition-all w-full sm:w-auto
-                  ${activeRoom.players.length === 0 
-                    ? 'bg-gray-300 cursor-not-allowed shadow-none' 
-                    : 'bg-green-500 hover:bg-green-600 hover:scale-105 active:scale-95 shadow-green-200'}
-                `}
-              >
-                <Play size={20} className="fill-current" /> BẮT ĐẦU
-              </button>
-            </div>
-
-            <div className="flex-1 bg-white rounded-2xl border border-gray-100 p-4 overflow-y-auto max-h-[300px]">
-              {activeRoom.players.length === 0 ? (
-                <div className="h-full flex flex-col items-center justify-center text-gray-400 gap-3 py-10 opacity-70">
-                  <Loader2 size={32} className="animate-spin text-indigo-300" />
-                  <p className="font-bold text-sm text-center">Đang đợi học sinh vào phòng...</p>
-                </div>
-              ) : (
-                <div className="grid grid-cols-2 gap-3">
-                  {activeRoom.players.map(p => (
-                    <div key={p.id} className="flex items-center gap-3 p-2 bg-gray-50 rounded-xl border border-gray-100 animate-in fade-in slide-in-from-bottom-2 duration-300">
-                      <div className={`w-8 h-8 rounded-lg flex items-center justify-center text-white font-black text-xs bg-gradient-to-br ${p.color}`}>
-                        {p.avatar}
-                      </div>
-                      <span className="font-bold text-xs text-gray-700 truncate">{p.name}</span>
-                    </div>
-                  ))}
-                </div>
-              )}
+              <div className="text-gray-400 font-bold text-sm mt-1">Share Via</div>
+              <div className="flex items-center gap-2 mt-1">
+                <button className="bg-[#3f3e46] p-1.5 rounded-md text-white hover:bg-white/20"><Link size={14} /></button>
+                {/* Fake Google Classroom icon */}
+                <button className="bg-green-700 p-1.5 rounded-md text-white hover:bg-green-600 flex items-center justify-center font-black text-[10px] w-7 h-7">GC</button>
+                <button className="text-gray-400 hover:text-white p-1"><ChevronDown size={16} /></button>
+              </div>
             </div>
           </div>
+
+          {/* Bottom Actions Row */}
+          <div className="flex flex-col sm:flex-row gap-4 items-stretch justify-between">
+            <button className="bg-[#2a2930] hover:bg-[#3a3a40] border border-white/5 text-gray-300 rounded-xl px-4 py-3 flex items-center gap-3 font-semibold transition-colors grow max-w-sm justify-between">
+              <span className="flex items-center gap-2 text-sm"><Volume2 size={16} className="text-gray-400" /> Auto start your quiz</span>
+              <div className="bg-[#3f3e46] p-1 rounded"><Play size={14} className="fill-current text-gray-400" /></div>
+            </button>
+            
+            <button 
+              onClick={handleStartGame}
+              disabled={activeRoom.players.length === 0}
+              className={`
+                flex-1 rounded-xl font-black text-xl text-white shadow-lg transition-all py-3 shadow-pink-900/50
+                ${activeRoom.players.length === 0 
+                  ? 'bg-[#8c184c] text-white/50 cursor-not-allowed shadow-none' 
+                  : 'bg-[#ED2E7E] hover:bg-[#fa3b8c] hover:scale-[1.02] active:scale-95'}
+              `}
+            >
+              START
+            </button>
+            
+            <button className="bg-[#2a2930] border border-white/5 text-white rounded-xl px-6 py-3 flex items-center justify-center gap-3 font-black text-xl shrink-0 min-w[100px]">
+              <Users size={24} className="text-gray-400" />
+              {activeRoom.players.length}
+            </button>
+          </div>
+        </div>
+
+        {/* Floating Avatars below */}
+        <div className="w-full max-w-6xl mt-12 grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 gap-4 px-6 content-start max-h-[300px] overflow-y-auto pt-4">
+          {activeRoom.players.length === 0 ? (
+            <div className="col-span-full flex flex-col items-center justify-center text-white/30 gap-3 py-10">
+              <Loader2 size={32} className="animate-spin" />
+              <p className="font-bold text-sm">Đang đợi học sinh vào phòng...</p>
+            </div>
+          ) : (
+            activeRoom.players.map(p => (
+              <div key={p.id} className="flex flex-col items-center gap-2 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                <div className={`w-14 h-14 rounded-2xl flex items-center justify-center text-white font-black text-2xl bg-gradient-to-br shadow-xl ${p.color} border-2 border-white/20 hover:scale-110 transition-transform cursor-pointer`}>
+                  {p.avatar}
+                </div>
+                <span className="font-bold text-xs text-white bg-black/50 px-2 py-1 rounded-md backdrop-blur-sm truncate max-w-full">
+                  {p.name}
+                </span>
+              </div>
+            ))
+          )}
         </div>
       </div>
     </div>
