@@ -40,7 +40,7 @@ export default function TeacherGameLobby() {
 
   const handleStartGame = () => {
     startGame(activeRoom.id);
-    navigate(`/teacher/game-stats/${activeRoom.id}`);
+    navigate(`/teacher/live-game/${activeRoom.id}`);
   };
 
   return (
