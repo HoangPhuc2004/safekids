@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router";
 import { ArrowLeft, ChevronRight, RefreshCw } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useGameRoom } from "../../context/GameRoomContext";
 
 type NodeId = 'start' | 'scene2' | 'node-phan-bac' | 'node-phot-lo' | 'end-tu-bo' | 'end-bao-canh-sat' | 'end-danh-du';
 
@@ -80,6 +81,7 @@ const storyData: Record<NodeId, StoryNode> = {
 
 export default function StoryGameView() {
   const navigate = useNavigate();
+  const { activeRoom } = useGameRoom();
   const [currentNodeId, setCurrentNodeId] = useState<NodeId>('start');
 
   const currentNode = storyData[currentNodeId];
@@ -172,10 +174,10 @@ export default function StoryGameView() {
                     CHƠI LẠI
                   </button>
                   <button
-                    onClick={() => navigate('/student')}
+                    onClick={() => navigate(`/student/game-result/${activeRoom?.id || '123'}`)}
                     className="flex-1 p-6 rounded-[2rem] bg-white text-indigo-900 font-black text-lg shadow-xl hover:shadow-2xl hover:bg-indigo-50 transition-all flex items-center justify-center transform hover:scale-[1.02] active:scale-95"
                   >
-                    VỀ TRANG CHỦ
+                    XEM KẾT QUẢ
                   </button>
                 </div>
               )}
