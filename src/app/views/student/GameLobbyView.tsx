@@ -164,7 +164,7 @@ export default function GameLobbyView() {
           <div className="flex items-center gap-4">
              <div className="text-right hidden sm:block">
                 <p className="text-[10px] font-black text-gray-500 uppercase tracking-widest leading-none mb-1">Số lượng tối thiểu</p>
-                <p className="text-white font-black">2 Chiến binh</p>
+                <p className="text-white font-black">1 Chiến binh</p>
              </div>
              <button className="bg-indigo-600/20 text-indigo-400 border border-indigo-500/30 px-8 py-3 rounded-2xl font-black text-xs uppercase tracking-widest cursor-not-allowed">
                Bắt đầu ngay

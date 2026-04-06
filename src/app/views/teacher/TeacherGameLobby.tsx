@@ -148,12 +148,9 @@ export default function TeacherGameLobby() {
             
             <button 
               onClick={handleStartGame}
-              disabled={activeRoom.players.length === 0}
               className={`
                 flex-1 rounded-xl font-black text-xl text-white shadow-lg transition-all py-3 shadow-pink-900/50
-                ${activeRoom.players.length === 0 
-                  ? 'bg-[#8c184c] text-white/50 cursor-not-allowed shadow-none' 
-                  : 'bg-[#ED2E7E] hover:bg-[#fa3b8c] hover:scale-[1.02] active:scale-95'}
+                bg-[#ED2E7E] hover:bg-[#fa3b8c] hover:scale-[1.02] active:scale-95
               `}
             >
               BẮT ĐẦU
