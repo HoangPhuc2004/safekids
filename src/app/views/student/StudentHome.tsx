@@ -1,14 +1,28 @@
 import { useNavigate } from "react-router";
-import { KeyRound, Trophy, Compass, BookOpen, Star } from "lucide-react";
+import { KeyRound, Trophy, Compass, BookOpen, Star, Hash, CheckCircle2, XCircle } from "lucide-react";
 import { useGameRoom } from "../../context/GameRoomContext";
 import { useState } from "react";
 import { useAuth } from "../../context/AuthContext";
+import { useGroups } from "../../context/GroupContext";
 
 export default function StudentHome() {
   const navigate = useNavigate();
   const { joinRoom } = useGameRoom();
   const { user } = useAuth();
+  const { joinGroupByCode } = useGroups();
   const [roomCode, setRoomCode] = useState("");
+  const [classCode, setClassCode] = useState("");
+  const [classJoinResult, setClassJoinResult] = useState<{ success: boolean; message: string } | null>(null);
+  const [classJoinLoading, setClassJoinLoading] = useState(false);
+
+  const handleClassJoin = () => {
+    if (classCode.length < 4) return;
+    setClassJoinLoading(true);
+    const result = joinGroupByCode(classCode, user?.username ?? "", user?.name ?? "");
+    setClassJoinResult(result);
+    setClassJoinLoading(false);
+    if (result.success) setClassCode("");
+  };
   
   const userName = user?.name || "Học sinh";
   const userAvatar = userName.substring(0, 2).toUpperCase();
@@ -82,6 +96,66 @@ export default function StudentHome() {
 
           {/* Quick Action Grids */}
           <div className="grid grid-cols-1 gap-6">
+            {/* Join Class Card */}
+            <div className="bg-white p-8 rounded-[2rem] shadow-sm border border-pink-100 flex flex-col gap-5">
+              <div className="flex items-center gap-4">
+                <div className="w-14 h-14 bg-pink-100 text-pink-600 rounded-[1.25rem] flex items-center justify-center shrink-0">
+                  <Hash size={28} strokeWidth={2.5} />
+                </div>
+                <div>
+                  <h3 className="font-black text-xl text-gray-900">Tham gia nhóm lớp</h3>
+                  <p className="text-gray-500 font-medium text-sm">Nhập mã 4 chữ số từ cô giáo để gửi yêu cầu tham gia.</p>
+                </div>
+              </div>
+
+              {classJoinResult && (
+                <div className={`flex items-start gap-3 p-4 rounded-2xl border-2 ${
+                  classJoinResult.success
+                    ? "bg-green-50 border-green-200"
+                    : "bg-red-50 border-red-200"
+                }`}>
+                  {classJoinResult.success
+                    ? <CheckCircle2 size={20} className="text-green-500 mt-0.5 flex-shrink-0" />
+                    : <XCircle size={20} className="text-red-400 mt-0.5 flex-shrink-0" />
+                  }
+                  <p className={`text-sm font-bold ${
+                    classJoinResult.success ? "text-green-700" : "text-red-600"
+                  }`}>{classJoinResult.message}</p>
+                </div>
+              )}
+
+              {!classJoinResult?.success && (
+                <div className="flex gap-3">
+                  <input
+                    type="text"
+                    value={classCode}
+                    onChange={e => { setClassCode(e.target.value.replace(/\D/g, "")); setClassJoinResult(null); }}
+                    onKeyPress={e => e.key === "Enter" && handleClassJoin()}
+                    placeholder="0000"
+                    maxLength={4}
+                    inputMode="numeric"
+                    className="flex-1 px-5 py-4 bg-gray-50 border-2 border-transparent rounded-2xl focus:outline-none focus:border-pink-400 focus:bg-white transition-all font-black text-2xl text-center tracking-[0.5em] font-mono"
+                  />
+                  <button
+                    onClick={handleClassJoin}
+                    disabled={classCode.length < 4 || classJoinLoading}
+                    className="bg-pink-600 hover:bg-pink-700 text-white px-6 py-4 rounded-2xl font-black transition-all shadow-lg hover:shadow-pink-200 active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed"
+                  >
+                    Gửi
+                  </button>
+                </div>
+              )}
+
+              {classJoinResult?.success && (
+                <button
+                  onClick={() => { setClassJoinResult(null); setClassCode(""); }}
+                  className="w-full py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-black rounded-2xl transition-all text-sm"
+                >
+                  Nhập mã khác
+                </button>
+              )}
+            </div>
+
             <button onClick={() => navigate("/student/groups")} className="bg-white p-8 rounded-[2rem] shadow-sm border border-indigo-50 flex flex-col md:flex-row items-center md:items-start text-center md:text-left gap-6 hover:border-indigo-200 transition-all hover:shadow-lg hover:-translate-y-1 group">
               <div className="w-20 h-20 bg-indigo-100 text-indigo-600 rounded-[1.5rem] flex items-center justify-center transition-transform group-hover:scale-110 shrink-0 shadow-inner">
                 <Compass size={40} strokeWidth={2.5} />
