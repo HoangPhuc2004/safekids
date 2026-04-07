@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router";
+import { useNavigate, useLocation } from "react-router";
 import {
   ArrowLeft, Plus, MessageCircle, ShieldCheck, Search,
   Clock, ChevronRight, X, Copy, Check, Users, Bell, LogIn,
@@ -10,13 +10,14 @@ import { useAuth } from "../../context/AuthContext";
 
 export default function GroupsView() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { user } = useAuth();
   const {
     groups, createGroup, joinGroupByCode,
     getGroupsForUser, getPendingRequestsForTeacher,
   } = useGroups();
 
-  const isTeacher = user?.role === "teacher";
+  const isTeacher = location.pathname.startsWith("/teacher");
   const userId = user?.username ?? "";
   const userName = user?.name ?? "";
 
